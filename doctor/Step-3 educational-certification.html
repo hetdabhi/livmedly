@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LivMedly | Doctor - Educational Certificate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            background-attachment: fixed;
+            animation: fadeInBody 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            /* Changed from overflow-y: auto */
+            min-height: auto;
+            height: 80vh;
+            margin: 20px auto 0;
+            position: relative;
+            /* Added position relative */
+            animation: fadeInUp 1.0s ease-in-out;
+        }
+
+        .form-container {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            /* Moved scroll to form container */
+            height: 100%;
+            /* Added height 100% */
+        }
+
+        .info-panel {
+            width: 60%;
+            background: linear-gradient(to right, #004E92, #5DB2FF);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: sticky;
+            /* Added sticky positioning */
+            top: 0;
+            /* Stick to top */
+            height: 100%;
+            /* Full height */
+            align-self: stretch;
+            /* Stretch to match container */
+        }
+
+        /* Rest of the styles remain the same */
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                max-height: 90vh;
+            }
+
+            .form-container,
+            .info-panel {
+                width: 100%;
+            }
+
+            .info-panel {
+                position: relative;
+                /* Reset position on mobile */
+                height: auto;
+                /* Auto height on mobile */
+            }
+
+            .form-container {
+                max-height: 70vh;
+                /* Limit height on mobile */
+                overflow-y: auto;
+            }
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #004E92, #5DB2FF);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            min-height: 100%;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000000;
+            font-size: 24px;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        input,
+        select {
+            background-color: #eee;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+/* 
+        .file-upload {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        } */
+/* 
+        .file-upload input[type="file"] {
+            background-color: white;
+            padding: 8px;
+            font-size: 13px;
+            flex: 1;
+        } */
+
+        .preview-image {
+            max-width: 50px;
+            max-height: 50px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .form-container,
+            .info-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="info-panel">
+            <h1>Welcome, Doctor!</h1>
+            <p>Please provide your educational and certification details to complete your registration</p>
+        </div>
+        <div class="form-container">
+            <h1>Educational Details</h1>
+            <form action="Step-4 doctor-login-verification-steps.html" method="POST" enctype="multipart/form-data">
+                <select name="degree" required>
+                    <option value="">Select Medical Degree</option>
+                    <option value="MBBS">MBBS</option>
+                    <option value="MD">MD</option>
+                    <option value="MS">MS</option>
+                    <option value="DM">DM</option>
+                    <option value="MCh">MCh</option>
+                </select>
+
+                <input type="text" name="university" placeholder="University/College Name" required>
+                <input type="number" name="passingYear" placeholder="Year of Passing" min="1950" max="2024" required>
+                <input type="text" name="registrationNumber" placeholder="Medical Registration Number" required>
+                <input type="date" name="licenseExpiry" placeholder="License Expiry Date" required>
+
+                <!-- Degree Certificate Upload -->
+                <div class="file-upload">
+                    <label for="degreeCertificate">Medical Degree Certificate:</label>
+                    <input type="file" name="degreeCertificate" accept=".pdf,.jpg,.jpeg,.png" required
+                        onchange="previewImage(event, 'degreePreview')">
+                </div>
+                <img id="degreePreview" class="file-preview" alt="Degree Certificate Preview" />
+
+                <!-- Medical License Upload -->
+                <div class="file-upload">
+                    <label for="medicalLicense">Medical License:</label>
+                    <input type="file" name="medicalLicense" accept=".pdf,.jpg,.jpeg,.png" required
+                        onchange="previewImage(event, 'licensePreview')">
+                </div>
+                <img id="licensePreview" class="file-preview" alt="Medical License Preview" />
+
+                <!-- Specialization Certificate Upload -->
+                <div class="file-upload">
+                    <label for="specializationCert">Specialization Certificate:</label>
+                    <input type="file" name="specializationCert" accept=".pdf,.jpg,.jpeg,.png" required
+                        onchange="previewImage(event, 'specializationPreview')">
+                </div>
+                <img id="specializationPreview" class="file-preview" alt="Specialization Certificate Preview" />
+
+                <div class="button-group">
+                    <button type="button" onclick="goBack()">Previous</button>
+                    <button type="submit">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(event, previewId) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block"; // Make the image preview visible
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+
+</html>

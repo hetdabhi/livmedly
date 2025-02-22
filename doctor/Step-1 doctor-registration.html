@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LivMedly | Doctor Registration Form</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            background-attachment: fixed;
+            animation: fadeInBody 1.5s ease-in-out;
+            overflow: auto;
+        }
+
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            min-height: auto;
+            height: auto;
+            align-items: stretch;
+            margin: 20px auto 0;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .form-container {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 80vh;
+            position: relative;
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #004E92, #5DB2FF);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        .info-panel p {
+            font-size: 14px;
+        }
+
+        .header-wrapper {
+            position: sticky;
+            top:0;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            margin-bottom: 10x;
+            z-index: 100;
+            border-bottom: 1px solid #fffefe;
+        }
+
+        h1 {
+            font-weight: bold;
+            color: #000000;
+            font-size: 24px;
+            margin: 10;
+        }
+
+        form {
+            display:flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: #eee;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 150px;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .form-container,
+            .info-panel {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="info-panel">
+            <h1>Welcome!</h1>
+            <p>Please complete your registration to join our medical team.</p>
+            <img src="" alt="" style="margin: 0px 0; border-radius: 0%;">
+            <p>Your expertise makes a difference in patients' lives.</p>
+        </div>
+
+        <div class="form-container">
+            <div class="header-wrapper">
+                <h1>Doctor Registration</h1>
+            </div>
+            <form id="doctorRegistrationForm" onsubmit="return validateForm(event)">
+                <input type="text" id="firstName" placeholder="First Name *" required>
+                <div class="error" id="firstNameError"></div>
+
+                <input type="text" id="lastName" placeholder="Last Name *" required>
+                <div class="error" id="lastNameError"></div>
+
+                <input type="date" id="dob" required>
+                <div class="error" id="dobError"></div>
+
+                <select id="gender" required>
+                    <option value="">Select Gender *</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="error" id="genderError"></div>
+
+                <input type="tel" id="phone" placeholder="Phone Number *" required>
+                <div class="error" id="phoneError"></div>
+
+                <input type="email" id="email" placeholder="Email Address *" required>
+                <div class="error" id="emailError"></div>
+
+                <textarea id="permanentAddress" placeholder="Permanent Address *" required></textarea>
+                <div class="error" id="permanentAddressError"></div>
+
+                <textarea id="currentAddress" placeholder="Current Address *" required></textarea>
+                <div class="error" id="currentAddressError"></div>
+
+                <input type="file" id="profilePhoto" accept="image/*" required onchange="previewImage(event)">
+                <img id="photoPreview" class="preview-image" alt="Profile preview">
+                <div class="error" id="profilePhotoError"></div>
+
+                <button type="submit">Next</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function calculateAge(birthday) {
+            const ageDifMs = Date.now() - new Date(birthday).getTime();
+            const ageDate = new Date(ageDifMs);
+            return Math.abs(ageDate.getUTCFullYear() - 1970);
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return /^\d{10}$/.test(phone);
+        }
+
+        function previewImage(event) {
+            const preview = document.getElementById('photoPreview');
+            const file = event.target.files[0];
+            if (file) {
+                preview.style.display = 'block';
+                preview.src = URL.createObjectURL(file);
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            return false;
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+
+        function validateForm(event) {
+            event.preventDefault();
+            clearErrors();
+
+            // Name validation
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            if (firstName.length < 2) return showError('firstNameError', 'First name must be at least 2 characters');
+            if (lastName.length < 2) return showError('lastNameError', 'Last name must be at least 2 characters');
+
+            // Age validation
+            const dob = document.getElementById('dob').value;
+            const age = calculateAge(dob);
+            if (!dob) return showError('dobError', 'Date of birth is required');
+            if (age < 25) return showError('dobError', 'Doctor must be at least 25 years old');
+
+            // Gender validation
+            const gender = document.getElementById('gender').value;
+            if (!gender) return showError('genderError', 'Please select a gender');
+
+            // Phone validation
+            const phone = document.getElementById('phone').value.trim();
+            if (!validatePhone(phone)) return showError('phoneError', 'Please enter a valid 10-digit phone number');
+
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            if (!validateEmail(email)) return showError('emailError', 'Please enter a valid email address');
+
+            // Address validation
+            const permanentAddress = document.getElementById('permanentAddress').value.trim();
+            const currentAddress = document.getElementById('currentAddress').value.trim();
+            if (permanentAddress.length < 10) return showError('permanentAddressError', 'Please enter a complete permanent address');
+            if (currentAddress.length < 10) return showError('currentAddressError', 'Please enter a complete current address');
+
+            // Profile photo validation
+            const profilePhoto = document.getElementById('profilePhoto').files[0];
+            if (!profilePhoto) return showError('profilePhotoError', 'Please select a profile photo');
+            if (!profilePhoto.type.startsWith('image/')) return showError('profilePhotoError', 'Please select a valid image file');
+
+            // If all validations pass, proceed to next step
+            alert('Validation successful! Proceeding to next step...');
+
+            // Redirect to next page
+            window.location.href = 'Step-2 professional-details.html';
+            return true;
+        }
+    </script>
+</body>
+
+</html>

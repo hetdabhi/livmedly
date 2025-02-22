@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LivMedly | Chatbot</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-image: url('chatbot page.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      width: 768px;
+      max-width: 100%;
+      min-height: 500px;
+      display: flex;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.8s ease-out 0.3s forwards;
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Chat panel styles */
+    .chat-container {
+      width: 60%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #eee;
+      position: relative;
+    }
+
+    .chat-container h1 {
+      margin-bottom: 20px;
+      color: #000000;
+      font-size: 24px;
+      position: sticky;
+      /* Sticky to the top */
+      top: 0;
+      /* Fixes it at the top of the chat container */
+      background-color: #fff;
+      z-index: 1;
+      /* Ensures it stays on top of other elements */
+      padding: 10px 0;
+      /* Add some padding for better spacing */
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      max-height: 400px;
+      /* Set a max-height to make it scrollable */
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 80%;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .user-message {
+      background-color: #283779;
+      color: #fff;
+      align-self: flex-end;
+    }
+
+    .bot-message {
+      background-color: #eee;
+      color: #000;
+      align-self: flex-start;
+    }
+
+    .chat-input {
+      display: flex;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px 0 0 20px;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      border-radius: 0 20px 20px 0;
+      border: 1px solid #1e7bb0;
+      background-color: #283779;
+      color: #fff;
+      font-size: 14px;
+      padding: 12px 25px;
+      border-left: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .chat-input button:hover {
+      background-color: #1e7bb0;
+    }
+
+    /* Info panel styles */
+    .info-panel {
+      width: 45%;
+      background: linear-gradient(to right, #5DB2FF, #004E92);
+      color: #FFFFFF;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .info-panel h1 {
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .info-panel p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .info-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .info-panel ul li {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .info-panel ul li i {
+      margin-right: 10px;
+    }
+
+    /* Footer panel styles */
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .footer h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer ul li {
+      display: inline;
+      margin: 5px 15px;
+      font-size: 14px;
+      color: #283779;
+      cursor: pointer;
+    }
+
+    .footer ul li:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .chat-container,
+      .info-panel {
+        width: 100%;
+      }
+
+      .info-panel {
+        border-top: 1px solid #eee;
+      }
+    }
+
+    /* Styling for the View Suggestions Button */
+    #viewSuggestionsBtn {
+      background-color: #007bff;
+      /* Blue color */
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      /* Smaller padding */
+      font-size: 14px;
+      /* Smaller font size */
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      width: auto;
+      /* Make the width auto instead of 100% */
+      display: inline-block;
+      /* Make it inline for a smaller button */
+      text-align: center;
+    }
+
+    /* Hover and Focus Effects for the Button */
+    #viewSuggestionsBtn:hover {
+      background-color: #0056b3;
+      /* Darker blue */
+      transform: scale(1.05);
+      /* Slightly enlarge the button on hover */
+    }
+
+    #viewSuggestionsBtn:focus {
+      outline: none;
+    }
+
+    #viewSuggestionsBtn:active {
+      background-color: #004085;
+      /* Even darker blue on click */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Chat Panel -->
+    <div class="chat-container">
+      <h1>Chat with Us</h1>
+      <div class="chat-messages" id="chatMessages">
+        <!-- Initial Bot Message -->
+        <div class="message bot-message">
+          Hello! How can I assist you today?
+        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Type your message here..." />
+        <button id="sendBtn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Info Panel -->
+    <div class="info-panel">
+      <h1>Chatbot Info</h1>
+      <p>
+        Welcome to our support chat. Ask any questions regarding appointments,
+        services, or general inquiries.
+      </p>
+      <ul>
+        <li><i class="fas fa-info-circle"></i> 24/7 Support</li>
+        <li><i class="fas fa-clock"></i> Quick Response</li>
+        <li><i class="fas fa-user-friends"></i> Friendly Assistance</li>
+      </ul>
+      <p>For urgent matters, call: <strong>+1 234 567 8900</strong></p>
+      <!-- View Suggestions Button -->
+      <button id="viewSuggestionsBtn">View Suggestions</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <h3>Need Suggestions?</h3>
+    <ul>
+      <li onclick="suggest('hello')">Hello</li>
+      <li onclick="suggest('how are you')">How are you?</li>
+      <li onclick="suggest('health')">Health Tips</li>
+      <li onclick="suggest('weight loss')">Weight Loss Tips</li>
+      <li onclick="suggest('nutrition')">Nutrition Information</li>
+      <li onclick="suggest('exercise')">Exercise Tips</li>
+      <li onclick="suggest('diet')">Diet Advice</li>
+      <li onclick="suggest('general inquiry')">General Inquiry</li>
+      <li onclick="suggest('bye')">Goodbye</li>
+    </ul>
+  </div>
+  <script>
+
+    const chatMessages = document.getElementById("chatMessages");
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    sendBtn.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    // Open the suggestions file when the button is clicked
+    viewSuggestionsBtn.addEventListener("click", function () {
+      window.open("suggestions.html", "_blank");
+    });
+
+    async function sendMessage() {
+      const text = chatInput.value.trim();
+      if (text === "") return;
+
+      // Append user message
+      appendMessage(text, "user-message");
+      chatInput.value = "";
+
+      // Simulate response based on text
+      let botResponse = getBotResponse(text);
+
+      appendMessage(botResponse, "bot-message");
+    }
+
+    function getBotResponse(text) {
+      const lowerText = text.toLowerCase();
+
+      // Predefined responses
+      const responses = {
+        "hello": "Hello! How can I assist you today?",
+        "hi": "Hi there! How can I help?",
+        "how are you": "I'm doing great, thanks for asking! How about you?",
+        "health": "Health is important! Stay hydrated, eat nutritious foods, and exercise regularly for the best results.",
+        "weight loss": "For weight loss, focus on a healthy diet, reduce calorie intake, and stay active with regular exercise.",
+        "nutrition": "Good nutrition includes a balance of protein, healthy fats, fruits, and vegetables. It's important to fuel your body with nutrients!",
+        "exercise": "Exercise is crucial for overall health. Aim for a combination of cardio and strength training exercises to keep fit.",
+        "diet": "A healthy diet is all about balance. Include plenty of fruits, vegetables, lean proteins, and healthy fats while controlling portion sizes.",
+        "general inquiry": "Feel free to ask me anything! I’m here to help with any questions or concerns you may have.",
+        "goodbye": "Goodbye! Have a wonderful day, and don't hesitate to return if you need more help!",
+        "default": "I'm sorry, I didn't quite understand that. Can you rephrase your question?",
+        "hello": "Hello! How can I assist you today?",
+        "hi": "Hi there! How can I help?",
+        "how are you": "I'm doing great, thanks for asking! How about you?",
+        "ok": "Alright, let me know if you need anything else!",
+        "no": "Okay, if you change your mind, feel free to ask!",
+        "yes": "Great! How can I assist you further?",
+        "thanks": "You're welcome! Let me know if you need any more help.",
+        "goodbye": "Goodbye! Have a wonderful day!",
+        "please": "You're welcome! What can I help you with next?",
+        "sorry": "No worries! How can I assist you?",
+        "thank you": "You're welcome! Let me know if you need any more help.",
+        "help": "Sure! What do you need help with?",
+        "what's your name": "I am your friendly assistant here to help you!",
+        "how old are you": "I don't have an age, but I'm always here to help you!",
+        "what can i do for you": "I'm here to assist you. What can I help with?",
+        "what time is it": "Sorry, I don't have the time right now, but check your device!",
+        "where are you from": "I exist in the cloud, always ready to assist you!",
+        "what is your purpose": "My purpose is to help you with any questions or problems you have.",
+        "how do i contact you": "You can always reach out to me here in this chat!",
+        "can you help me": "Yes, of course! What do you need help with?",
+        "how old are you": "I don’t age, but I’m always learning new things!",
+        "where are you from": "I exist in the cloud, always ready to assist you!",
+        "can you help me": "Of course! What do you need help with?",
+        "what's your name": "I’m a chatbot, here to assist you!",
+        "are you human": "Nope, I’m a chatbot, but I try my best to be helpful!",
+        "can you call someone for me": "I can’t make calls, but I can provide contact details!",
+        "what is AI": "AI stands for Artificial Intelligence, which helps computers think and learn!",
+        "tell me a fun fact": "Did you know octopuses have three hearts?",
+        "what languages do you speak": "I can understand many languages! What would you like to ask?",
+        "how do I contact customer support": "You can call our support team at [number] or visit our website!",
+        "can you translate this for me": "Sure! What language do you need it translated into?",
+        "what is your purpose": "My purpose is to assist you with information and tasks!",
+        "do you sleep": "Nope, I’m always awake and ready to help!",
+        "how do I track my order": "You can track it through our website or app using your order number.",
+        "what’s your favorite color": "I like all colors, but blue is quite popular!",
+        "can you tell me a story": "Sure! Once upon a time… Oh, wait, I’m supposed to help, not tell stories!",
+        "how do I change my email": "You can update your email in the account settings of our website.",
+        "what should I do if I forget my username": "You can retrieve it using the 'Forgot Username' option on our site.",
+        "can I get a refund": "Refunds depend on the policy. Would you like me to check for you?",
+        "do you have feelings": "I don’t have emotions, but I’m here to support you!",
+        "how do I update my software": "You can check for updates in your device settings or app store.",
+        "can you sing a song": "I can’t sing, but I can suggest some good songs!",
+        "who is the president": "Let me check the latest update for you!",
+        "how do I turn on dark mode": "You can enable dark mode in your settings under 'Appearance'.",
+        "what is the best phone": "It depends on your needs! Are you looking for camera quality or performance?",
+        "can I schedule a meeting": "Sure! What date and time would you like to book?",
+        "what’s trending right now": "Let me check the latest trends for you!",
+        "can you tell me a quote": "Sure! 'The only way to do great work is to love what you do.' - Steve Jobs",
+        "how do I delete my account": "You can delete your account from the settings, but be sure before proceeding!",
+        "can you order food for me": "I can't place orders, but I can suggest great food delivery services!",
+        "how do I restart my device": "Press and hold the power button, then select 'Restart'.",
+        "what’s the time now": "I don’t have a clock, but you can check on your device!",
+        "how do I install an app": "Go to the app store, search for the app, and tap 'Install'!",
+        "what’s your favorite movie": "I don't watch movies, but I can recommend some good ones!",
+        "where is the nearest hospital": "I can find that for you! What's your location?",
+        "how do I reset my password": "You can reset your password using the 'Forgot Password' link on our login page.",
+        "what's the date today": "I don't track the date, but you can check it on your device!",
+        "how do I check my balance": "You can check your balance by logging into your account on our website.",
+        "what is the capital of France": "The capital of France is Paris!",
+        "how can I improve my WiFi speed": "Try moving closer to the router or restarting your device.",
+        "can you tell me a riddle": "Sure! What has to be broken before you can use it? An egg!",
+        "what should I eat today": "How about trying a new cuisine? Maybe something spicy or a healthy salad!",
+        "how do I book a flight": "You can book a flight through airline websites or travel agencies online.",
+        "how do I set up my email": "Go to your device’s email settings and follow the setup instructions.",
+        "what is the weather like today": "I can’t check the weather, but you can use a weather app!",
+        "good morning": "Good morning! How can I help you today?",
+        "good night": "Good night! Sleep well and feel free to reach out anytime.",
+        "what's up": "Not much, just here to help you! How can I assist?",
+        "how's the weather": "Sorry, I can't check the weather. You can check on your device!",
+        "i don't understand": "No worries! Let me know what you're looking for, and I'll try to explain.",
+        "can i ask you something": "Of course! Ask away, I'm here to help.",
+        "what's the date": "I don't know the current date, but you can check it on your device!",
+        "can i speak to a person": "I can help you with many things, but if you need a human, let me know!",
+        "are you a robot": "Yes, I am a bot here to help! How can I assist you?",
+        "how do i reset my password": "Please visit the 'Forgot Password' page on our site to reset your password.",
+        "can you recommend something": "Sure! What are you looking for? Products, services, or advice?",
+        "how to lose weight": "To lose weight, a balanced diet and regular exercise are key. Let me know if you need a plan!",
+        "what is a diet plan": "A diet plan includes healthy eating habits to help you reach your health goals.",
+        "tell me about health tips": "Stay hydrated, eat fruits and vegetables, and exercise regularly for good health!",
+        "what's the best exercise for weight loss": "Cardio exercises like running, cycling, or swimming are great for weight loss.",
+        "can i get a recommendation": "Sure! What kind of recommendation are you looking for?",
+        "how to stay healthy": "Eating healthy, exercising, and taking care of your mental well-being are essential.",
+        "what should i eat for breakfast": "Try a healthy breakfast like oats, fruits, or whole-grain toast with eggs.",
+        "how to reduce stress": "Try breathing exercises, meditation, and regular physical activity to reduce stress.",
+        "how to sleep better": "Create a calm environment, avoid screens, and stick to a sleep schedule for better sleep.",
+        "is exercise important": "Yes, exercise is very important for overall health, fitness, and well-being!",
+        "do you have a workout plan": "I can provide some exercise routines! What type of workout are you interested in?",
+        "how to stay motivated": "Set small goals, track progress, and reward yourself along the way to stay motivated.",
+        "i need help": "I'm here to help! What do you need assistance with?",
+        "thank you for your help": "You're very welcome! I'm glad I could assist you.",
+        "can i talk to someone": "Sure! I can connect you with someone if needed. Let me know.",
+        "is this a bot": "Yes, I am a bot created to assist you. How can I help today?",
+        "what's your function": "My function is to help answer questions and assist with various tasks.",
+        "tell me a joke": "Why don't skeletons fight each other? They don't have the guts!",
+        "how can i improve my health": "Focus on balanced nutrition, regular exercise, and managing stress to improve health.",
+        "are you available all the time": "Yes, I’m always here to assist you whenever you need help!",
+        "how to stay healthy": "Eat nutritious food, stay active, get enough rest, and maintain a positive mindset!",
+        "what is mental health": "Mental health refers to emotional, psychological, and social well-being. It's important to take care of it.",
+        "can i ask about weight loss": "Yes, feel free to ask! I can provide tips or suggest a plan for weight loss.",
+        "can i get a diet plan": "Sure! Let me know your goals and preferences, and I can suggest a diet plan for you.",
+        "how do i improve my diet": "Eat more whole foods like fruits, vegetables, whole grains, and lean proteins. Avoid processed foods.",
+        "how do i start exercising": "Start with light activities like walking or stretching, then gradually increase the intensity.",
+        "tell me about yourself": "I am a bot designed to help answer your questions and assist with tasks. I'm always here for you!",
+        "is there any advice for my health": "Yes! Stay hydrated, get enough sleep, eat a balanced diet, and exercise regularly.",
+        "what is cardio": "Cardio is any exercise that raises your heart rate. It's great for heart health and weight loss.",
+        "how to manage time better": "Use a planner, prioritize tasks, and break down large projects into smaller steps.",
+        "can i speak to a specialist": "I can provide information, but if you need a specialist, I can connect you with one.",
+        "how do i track my progress": "Use a journal or an app to track your goals, steps, and milestones for motivation.",
+        "what is a healthy lifestyle": "A healthy lifestyle includes a balanced diet, regular exercise, good sleep, and stress management.",
+        "how do i boost my immune system": "Eat a balanced diet, get enough sleep, exercise, and manage stress to keep your immune system strong.",
+        "can you recommend a workout": "Sure! What type of workout are you looking for? Strength training, cardio, or flexibility?",
+        "what is a balanced diet": "A balanced diet includes all the food groups in the right proportions: proteins, carbs, fats, fruits, and vegetables.",
+        "how do i maintain my weight": "To maintain weight, focus on a balanced diet and regular exercise. Avoid overeating and stay active.",
+        "what is a calorie deficit": "A calorie deficit occurs when you consume fewer calories than your body needs, which leads to weight loss.",
+        "can i drink coffee while dieting": "Yes, in moderation! But be mindful of added sugar or cream, as they can add extra calories.",
+        "how many calories should i eat": "The number of calories depends on your age, gender, activity level, and health goals.",
+        "what is the best time to exercise": "The best time to exercise is whenever it fits your schedule. Consistency is key!",
+        "how to deal with anxiety": "Try breathing exercises, meditation, and talking to a professional to help manage anxiety.",
+        "how to stay positive": "Practice gratitude, surround yourself with positivity, and focus on the good in your life.",
+        "what is the best workout for beginners": "Start with bodyweight exercises like squats, push-ups, and lunges, and gradually increase intensity.",
+        "how much water should i drink": "A good rule of thumb is to drink at least 8 cups (64 ounces) of water per day, but it varies based on activity level.",
+        "can i eat snacks on a diet": "Yes, you can! Just choose healthy snacks like fruits, nuts, or yogurt in moderation.",
+        "how to improve digestion": "Eat fiber-rich foods, drink plenty of water, and avoid overeating to improve digestion.",
+        "what are superfoods": "Superfoods are nutrient-dense foods that offer health benefits, such as berries, leafy greens, and nuts.",
+        "how do i track calories": "You can use a food tracking app or keep a food journal to track your calories and nutritional intake.",
+        "how to reduce sugar intake": "Limit sugary drinks, avoid processed snacks, and replace sugary desserts with fruit.",
+        "what are the benefits of meditation": "Meditation can help reduce stress, improve focus, and enhance overall well-being.",
+        "how to get better sleep": "Establish a consistent sleep schedule, avoid caffeine, and create a calming bedtime routine.",
+        "can you help with fitness goals": "Yes, I'd be happy to assist you with setting and achieving your fitness goals.",
+        "what is intermittent fasting": "Intermittent fasting involves cycling between periods of eating and fasting, and it can support weight loss and improve health.",
+        "how to stop procrastinating": "Break tasks into smaller, manageable steps, set deadlines, and eliminate distractions.",
+        "what are the symptoms of dehydration": "Signs of dehydration include dry mouth, fatigue, dizziness, and dark-colored urine. Drink plenty of fluids!",
+        "can you help with stress management": "Yes, I can suggest relaxation techniques like deep breathing, yoga, and mindfulness exercises.",
+        "how do i lose belly fat": "Belly fat can be reduced with a combination of healthy eating, cardio exercises, and strength training.",
+        "what is a smoothie bowl": "A smoothie bowl is a thicker version of a smoothie, usually topped with fruits, seeds, and nuts.",
+        "how to build muscle": "Building muscle requires a combination of strength training and proper nutrition, including adequate protein intake.",
+        "can i eat carbs while dieting": "Yes, you can! Just choose healthy, complex carbs like whole grains, fruits, and vegetables.",
+        "what is the keto diet": "The keto diet is a low-carb, high-fat diet that helps your body enter a state of ketosis, burning fat for energy.",
+        "what are healthy fats": "Healthy fats include avocados, nuts, seeds, and olive oil. They support heart health and overall well-being.",
+        "can you help me with meal planning": "Absolutely! Let me know your dietary preferences, and I can suggest some meal ideas for you.",
+        "how do i manage my weight loss journey": "Track your progress, stay consistent with healthy habits, and seek support when needed.",
+        "how do i stay motivated to work out": "Set achievable goals, find a workout buddy, and reward yourself for reaching milestones.",
+        "how do i eat healthy on a budget": "Focus on buying in-season produce, bulk grains, and cooking at home to save money while eating healthy.",
+        "how much protein do i need": "Protein needs vary based on age, activity level, and health goals, but generally 0.8g of protein per kg of body weight is recommended.",
+        "what is a healthy snack": "Healthy snacks include fresh fruit, nuts, yogurt, or whole-grain crackers.",
+        "what is the best diet plan": "The best diet plan is one that is balanced, sustainable, and tailored to your individual needs and preferences.",
+        "how do i manage cravings": "Drink water, distract yourself, and try healthier alternatives like fruits or nuts to manage cravings.",
+        "how do i prevent injuries while exercising": "Warm-up properly, use the correct form, and listen to your body to prevent injuries while exercising.",
+        "can i eat chocolate while dieting": "Yes, but in moderation! Dark chocolate is a healthier option compared to milk chocolate.",
+        "what is portion control": "Portion control means eating the right amount of food to help you manage your calorie intake.",
+        "what is the best weight loss program": "The best weight loss program is one that combines healthy eating, regular exercise, and mental well-being.",
+        "how do i reduce bloating": "Drink water, avoid salty foods, and include fiber-rich foods like fruits and vegetables to help reduce bloating.",
+        "how to stay consistent with my diet": "Plan your meals, track your progress, and stay motivated to keep consistent with your diet.",
+        "how do i get toned": "To get toned, focus on strength training exercises that target your muscles and build lean muscle mass.",
+        "how do i increase energy levels": "Eat balanced meals, exercise regularly, get enough sleep, and stay hydrated to boost your energy levels.",
+        "what is a food pyramid": "The food pyramid is a visual guide that shows how different food groups should be consumed for a balanced diet.",
+        "bye": "Goodbye! Take care and feel free to come back anytime!",
+        "goodbye": "Goodbye! Wishing you all the best, and hope to chat with you again soon!",
+        "see you later": "See you later! Don't hesitate to reach out if you need anything!",
+        "talk to you soon": "Talk to you soon! Have a wonderful day ahead!",
+        "catch you later": "Catch you later! If you need help, you know where to find me!",
+        "by": "Goodbye! Take care and feel free to come back anytime!",
+        "bye": "Bye! Wishing you a great day ahead. Come back soon!",
+        "goodbye": "Goodbye! We'll miss you, take care!",
+        "see you by": "See you soon! Let me know if you need any more help!",
+        "catch you by": "Catch you later! I'm here whenever you need assistance!"
+      };
+
+      // Loop through the responses object and return the matching response
+      for (let key in responses) {
+        if (lowerText.includes(key)) {
+          return responses[key];
+        }
+      }
+
+      return "I'm sorry, I didn't quite get that. Can you please ask something else?";
+    }
+
+    function appendMessage(text, className) {
+      const msgDiv = document.createElement("div");
+      msgDiv.classList.add("message", className);
+      msgDiv.textContent = text;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function suggest(query) {
+      chatInput.value = query;
+      sendMessage();
+    }
+  </script>
+</body>
+
+</html>

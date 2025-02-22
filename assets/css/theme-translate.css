@@ -1,0 +1,33 @@
+/* Style the Google Translate button - Compact */
+.goog-te-gadget-simple {
+    background-color: #B0D0F0 !important; /* Light blue background */
+    color: blue !important; /* Text color */
+    border: none !important;
+    border-radius: 5px !important; /* Rounded edges */
+    padding: 4px 8px !important; /* Smaller padding */
+    font-size: 14px !important; /* Smaller font */
+    font-weight: bold !important;
+    display: inline-flex !important;
+    align-items: center;
+    height: 30px !important; /* Reduce height */
+}
+
+/* Adjust the Google icon inside the button */
+.goog-te-gadget img {
+    width: 16px !important; /* Smaller icon */
+    height: 16px !important;
+    margin-right: 3px !important;
+}
+
+/* Style the dropdown arrow */
+.goog-te-gadget-simple span {
+    color: #000 !important;
+    font-size: 12px !important; /* Smaller arrow text */
+    padding-left: 3px !important;
+}
+
+/* Hover effect */
+.goog-te-gadget-simple:hover {
+    background-color: #1e5ca1 !important; /* Darker blue on hover */
+    transition: 0.3s ease-in-out;
+}

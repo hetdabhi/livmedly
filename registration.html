@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('images/registration page.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            background-attachment: fixed;
+            animation: fadeInBody 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            min-height: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 0 auto;
+            animation: fadeInContainer 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInContainer {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            width: 60%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInForm 1s ease-in-out;
+        }
+
+        @keyframes fadeInForm {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000000;
+            font-size: 24px;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        .info-panel p {
+            font-size: 14px;
+        }
+/* 
+        .doctor-btn {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        } */
+
+        .doctor-btn:hover {
+            background-color: #1e7bb0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: #eee;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            font-size: 14px;
+            animation: fadeInInput 1s ease-in-out;
+        }
+
+        @keyframes fadeInInput {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+            max-height: 120px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+            animation: fadeInButton 1s ease-in-out;
+        }
+
+        @keyframes fadeInButton {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                min-height: auto;
+                max-height: none;
+                padding: 10px;
+            }
+
+            .form-container,
+            .info-panel {
+                width: 100%;
+            }
+
+            .info-panel {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            input {
+                padding: 10px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="info-panel">
+            <h1>Hello, Friend!</h1>
+            <p>Enter your personal details and start your journey with us</p><br><br>
+
+            <!-- Doctor Registration Button -->
+            <!-- <a href="doctor\doctor-registration.html">
+                <button class="doctor-btn">Doctor Registration</button>
+            </a> -->
+        </div>
+        <div class="form-container">
+            <h1>Register Yourself</h1>
+            <form action="registration.php" method="POST">
+                <input type="text" name="fullname" placeholder="Full Name" required>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <select name="gender" required>
+                    <option value="">Select a gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <select name="bloodgroup" required>
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+                <textarea name="address" placeholder="Address" required></textarea>
+                <div class="password-container">
+                    <input type="password" name="password" placeholder="Password" required id="password">
+                    <span class="eye-icon" onclick="togglePasswordVisibility('password')" id="eye-icon-password">
+                        👁️
+                    </span>
+                </div>
+                <div class="password-container">
+                    <input type="password" name="cpassword" placeholder="Confirm Password" required id="cpassword">
+                    <span class="eye-icon" onclick="togglePasswordVisibility('cpassword')" id="eye-icon-cpassword">
+                        👁️
+                    </span>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(id) {
+            const passwordField = document.getElementById(id);
+            const eyeIcon = document.getElementById('eye-icon-' + id);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.innerHTML = '🙈'; // Change to closed eye icon
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.innerHTML = '👁️'; // Change back to open eye icon
+            }
+        }
+    </script>
+</body>
+
+</html>

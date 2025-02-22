@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>LivMedly | Contact Us</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            max-width: 100%;
+            min-height: 500px;
+            max-height: 90vh;
+            display: flex;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-form {
+            width: 60%;
+            padding: 25px;
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: #FFFFFF;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000000;
+            font-size: 24px;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input,
+        textarea {
+            background-color: #eee;
+            border: none;
+            padding: 10px 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            transform: scale(1.01);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            max-height: 150px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 10px 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 8px;
+            align-self: flex-start;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+            transform: translateY(-2px);
+        }
+
+        .contact-info {
+            margin-bottom: 20px;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInLeft 0.5s ease-out forwards;
+            font-size: 14px;
+        }
+
+        .contact-info-item:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        .contact-info-item:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .contact-info-item:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .contact-info-item:nth-child(4) {
+            animation-delay: 0.7s;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .contact-info-item i {
+            font-size: 18px;
+            margin-right: 12px;
+            width: 18px;
+        }
+
+        .social-links {
+            margin-top: auto;
+        }
+
+        .social-links a {
+            color: white;
+            margin-right: 15px;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                min-height: auto;
+                height: auto;
+                margin: 15px;
+            }
+
+            .contact-form,
+            .info-panel {
+                width: 100%;
+            }
+
+            .info-panel {
+                padding: 20px;
+            }
+
+            .social-links {
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="contact-form">
+            <h1>Get in Touch</h1>
+            <form action="contact.php" method="POST">
+                <input type="text" name="full_name" placeholder="Full Name" required />
+                <input type="email" name="email" placeholder="Email Address" required />
+                <input type="tel" name="phone" placeholder="Phone Number" required />
+                <input type="text" name="subject" placeholder="Subject" required />
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+        <div class="info-panel">
+            <h1>Contact Information</h1>
+            <div class="contact-info">
+                <div class="contact-info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Parul University<br>Vadodara, GJ 390001</p>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-phone"></i>
+                    <p>+91 1234567890</p>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <p>livmedlycare@gmail.com</p>
+                </div>
+                <div class="contact-info-item">
+                    <i class="far fa-clock"></i>
+                    <p>Mon - Fri: 9:00 AM - 6:00 PM<br>Sat: 9:00 AM - 1:00 PM</p>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

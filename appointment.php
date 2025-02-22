@@ -1,0 +1,401 @@
+<?php
+session_start();
+include 'config.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo "<script>alert('Please log in first!'); window.location.href='login.html';</script>";
+    exit();
+}
+
+$user_id = $_SESSION['user_id']; // Get logged-in user's ID
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+$phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $department = $_POST['department'];
+    $doctor_id = $_POST['doctor_id'];  // Now use doctor_id
+    $specialization = $_POST['specialization'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+    $notes = $_POST['notes'];
+
+    date_default_timezone_set("Asia/kolkata"); // Change this to your actual timezone
+
+    // Convert appointment date & time to timestamp
+    $appointmentDateTime = strtotime($date . " " . $time);
+    $currentDateTime = time();
+
+    // Check if the appointment is in the past
+    if ($appointmentDateTime < $currentDateTime) {
+        echo "<script>alert('❌ Error: You cannot book an appointment in the past!');</script>";
+        echo "<script>window.location.href = 'appointment.php';</script>";
+        exit;
+    }
+
+    // Check if doctor exists in doctors table
+    $doctor_check_sql = "SELECT id FROM doctors WHERE id = ?";
+    $doctor_check_stmt = $conn->prepare($doctor_check_sql);
+    $doctor_check_stmt->bind_param("i", $doctor_id);
+    $doctor_check_stmt->execute();
+    $doctor_check_stmt->store_result();
+
+    if ($doctor_check_stmt->num_rows == 0) {
+        echo "<script>alert('❌ Error: Selected doctor does not exist!'); window.history.back();</script>";
+        exit;
+    }
+
+    $doctor_check_stmt->close();
+
+    // Prepare the SQL query with user_id and doctor_id
+    $sql = "INSERT INTO appointments (user_id, name, email, phone, department, doctor_id, specialization, date, time, notes) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssssssss", $user_id, $name, $email, $phone, $department, $doctor_id, $specialization, $date, $time, $notes);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('✅ Appointment booked successfully!'); window.location.href='userdashboard.php';</script>";
+    } else {
+        echo "<script>alert('❌ Error booking appointment: " . $stmt->error . "'); window.history.back();</script>";
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>LivMedly | Book Appointment</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            /* Reduced the width */
+            max-width: 500%;
+            height: 400px;
+            /* Adjust the height as well */
+            min-height: 600px;
+            /* Set a minimum height */
+            display: flex;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.8s ease-out 0.3s forwards;
+        }
+
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .appointment-form {
+            width: 60%;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 680px;
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: #FFFFFF;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000000;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: #eee;
+            border: none;
+            padding: 12px 15px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        input:nth-child(1) {
+            animation-delay: 0.4s;
+        }
+
+        input:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        input:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        select:nth-child(4) {
+            animation-delay: 0.7s;
+        }
+
+        select:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+
+        input:nth-child(6) {
+            animation-delay: 0.9s;
+        }
+
+        select:nth-child(7) {
+            animation-delay: 1s;
+        }
+
+        textarea:nth-child(8) {
+            animation-delay: 1.1s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            transform: scale(1.01);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            max-height: 150px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 1.2s forwards;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .info-list li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInLeft 0.5s ease-out forwards;
+        }
+
+        .info-list li:nth-child(1) {
+            animation-delay: 0.6s;
+        }
+
+        .info-list li:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+
+        .info-list li:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+
+        .info-list li:nth-child(4) {
+            animation-delay: 0.9s;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-list i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: auto;
+                margin: 20px;
+            }
+
+            .appointment-form,
+            .info-panel {
+                width: 100%;
+                max-height: none;
+            }
+
+            .info-panel {
+                padding: 30px;
+            }
+
+            body {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="appointment-form">
+            <h1>Book an Appointment</h1>
+            <form action="appointment.php" method="POST">
+                <input type="text" name="name" placeholder="Full Name" required />
+                <input type="email" name="email" placeholder="Email Address" value="<?php echo htmlspecialchars($email); ?>" readonly required />
+                <input type="tel" name="phone" placeholder="Phone Number" value="<?php echo htmlspecialchars($phone); ?>" readonly required />
+                <select name="department" required>
+                    <option value="" disabled selected>Select Department</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="neurology">Neurology</option>
+                    <option value="pediatrics">Pediatrics</option>
+                    <option value="orthopedics">Orthopedics</option>
+                </select>
+                <select name="doctor" required>
+                    <option value="" disabled selected>Select Doctor</option>
+                    <option value="dr-smith">Dr. Smith</option>
+                    <option value="dr-johnson">Dr. Johnson</option>
+                    <option value="dr-williams">Dr. Williams</option>
+                    <option value="dr-brown">Dr. Brown</option>
+                </select>
+                <select name="specialization" required>
+                    <option value="" disabled selected>Select Specialization</option>
+                    <option value="cardiologist">Cardiologist</option>
+                    <option value="neurologist">Neurologist</option>
+                    <option value="pediatrician">Pediatrician</option>
+                    <option value="orthopedic">Orthopedic</option>
+                </select>
+
+                <input type="date" name="date" required />
+                <select name="time" required>
+                    <option value="" disabled selected>Select Time Slot</option>
+                    <option value="09:00">09:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="14:00">02:00 PM</option>
+                    <option value="15:00">03:00 PM</option>
+                </select>
+                <textarea name="notes" placeholder="Additional Notes (Optional)"></textarea>
+                <button type="submit">Book Appointment</button>
+            </form>
+
+        </div>
+        <div class="info-panel">
+            <h1>Important Information</h1>
+            <ul class="info-list">
+                <li><i class="far fa-clock"></i> Please arrive 15 minutes early</li>
+                <li><i class="far fa-calendar-check"></i> 24-hour cancellation policy</li>
+                <li><i class="far fa-file-alt"></i> Bring your medical history</li>
+                <li><i class="far fa-id-card"></i> Don't forget your ID</li>
+            </ul>
+            <p>Need help? Contact us at:</p>
+            <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LivMedly | Doctor - Login & Verification</title>
+    <link favicon="" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('/api/placeholder/1920/1080');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 15px;
+            background-attachment: fixed;
+            animation: fadeInBody 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInBody {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            max-width: 100%;
+            display: flex;
+            flex-direction: row;
+            overflow: hidden;
+            min-height: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px auto 0;
+            animation: fadeInContainer 1.5s ease-in-out;
+        }
+
+        .form-container {
+            width: 60%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInForm 1s ease-in-out;
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000000;
+            font-size: 24px;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        .info-panel p {
+            font-size: 14px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: #eee;
+            border: none;
+            padding: 8px 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            font-size: 14px;
+            animation: fadeInInput 1s ease-in-out;
+        }
+
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+            max-height: 120px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+            animation: fadeInButton 1s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+        }
+
+        .error {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                min-height: auto;
+                max-height: none;
+                padding: 10px;
+            }
+
+            .form-container,
+            .info-panel {
+                width: 100%;
+            }
+
+            .info-panel {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>LivMedly Login</h1>
+            <form action="login_processing.php" method="POST">
+                <!-- Username / Email -->
+                <input type="text" name="username" placeholder="Username or Email" required>
+
+                <!-- Password -->
+                <input type="password" name="password" placeholder="Password" required>
+
+                <!-- Role Selection -->
+                <select name="role" required>
+                    <option value="Doctor">Doctor</option>
+                    <option value="Administrator">Administrator</option>
+                    <option value="Super Doctor">Super Doctor</option>
+                </select>
+
+                <!-- Emergency & Additional Details Section -->
+                <h2>Emergency & Additional Details</h2>
+
+                <!-- Alternate Contact Person -->
+                <input type="text" name="alternate_contact" placeholder="Alternate Contact Person (Spouse, Family)" required>
+
+                <!-- Emergency Contact Number -->
+                <input type="text" name="emergency_contact" placeholder="Emergency Contact Number" required>
+
+                <!-- Blood Group -->
+                <input type="text" name="blood_group" placeholder="Blood Group" required>
+
+                <!-- Medical Insurance Details -->
+                <input type="text" name="insurance_details" placeholder="Medical Insurance Details (if any)">
+
+                <button type="submit">Login</button>
+
+                <div class="error" id="error-message">Invalid credentials. Please try again.</div>
+            </form>
+        </div>
+
+        <div class="info-panel">
+            <h1>Welcome to LivMedly</h1>
+            <p>Your healthcare system access platform</p>
+        </div>
+    </div>
+</body>
+
+</html>
