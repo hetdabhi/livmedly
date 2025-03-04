@@ -89,7 +89,7 @@
         }
 
         .header-wrapper {
-            position: sticky;
+            position: not-sticky;
             top:0;
             background-color: rgba(255, 255, 255, 0.95);
             padding: 20px 0;
@@ -181,7 +181,8 @@
             <div class="header-wrapper">
                 <h1>Doctor Registration</h1>
             </div>
-            <form id="doctorRegistrationForm" onsubmit="return validateForm(event)">
+            <form id="doctorRegistrationForm" action="process_registration.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm(event)">
+
                 <input type="text" id="firstName" placeholder="First Name *" required>
                 <div class="error" id="firstNameError"></div>
 
@@ -303,6 +304,98 @@
             window.location.href = 'Step-2 professional-details.html';
             return true;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+    loadFormData(); // Load saved form data when the page loads
+});
+
+// Function to save form data to localStorage
+function saveFormData() {
+    const formData = {
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        permanentAddress: document.getElementById('permanentAddress').value.trim(),
+        currentAddress: document.getElementById('currentAddress').value.trim(),
+    };
+
+    localStorage.setItem('doctorFormData', JSON.stringify(formData));
+}
+
+// Function to load saved form data from localStorage
+function loadFormData() {
+    const savedData = JSON.parse(localStorage.getItem('doctorFormData'));
+    if (savedData) {
+        document.getElementById('firstName').value = savedData.firstName || '';
+        document.getElementById('lastName').value = savedData.lastName || '';
+        document.getElementById('dob').value = savedData.dob || '';
+        document.getElementById('gender').value = savedData.gender || '';
+        document.getElementById('phone').value = savedData.phone || '';
+        document.getElementById('email').value = savedData.email || '';
+        document.getElementById('permanentAddress').value = savedData.permanentAddress || '';
+        document.getElementById('currentAddress').value = savedData.currentAddress || '';
+    }
+}
+
+// Attach event listeners to save data on input change
+document.querySelectorAll('input, select, textarea').forEach(element => {
+    element.addEventListener('input', saveFormData);
+});
+
+// Modify the validateForm function to clear localStorage after successful submission
+function validateForm(event) {
+    event.preventDefault();
+    clearErrors();
+
+    // Name validation
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    if (firstName.length < 2) return showError('firstNameError', 'First name must be at least 2 characters');
+    if (lastName.length < 2) return showError('lastNameError', 'Last name must be at least 2 characters');
+
+    // Age validation
+    const dob = document.getElementById('dob').value;
+    const age = calculateAge(dob);
+    if (!dob) return showError('dobError', 'Date of birth is required');
+    if (age < 25) return showError('dobError', 'Doctor must be at least 25 years old');
+
+    // Gender validation
+    const gender = document.getElementById('gender').value;
+    if (!gender) return showError('genderError', 'Please select a gender');
+
+    // Phone validation
+    const phone = document.getElementById('phone').value.trim();
+    if (!validatePhone(phone)) return showError('phoneError', 'Please enter a valid 10-digit phone number');
+
+    // Email validation
+    const email = document.getElementById('email').value.trim();
+    if (!validateEmail(email)) return showError('emailError', 'Please enter a valid email address');
+
+    // Address validation
+    const permanentAddress = document.getElementById('permanentAddress').value.trim();
+    const currentAddress = document.getElementById('currentAddress').value.trim();
+    if (permanentAddress.length < 10) return showError('permanentAddressError', 'Please enter a complete permanent address');
+    if (currentAddress.length < 10) return showError('currentAddressError', 'Please enter a complete current address');
+
+    // Profile photo validation
+    const profilePhoto = document.getElementById('profilePhoto').files[0];
+    if (!profilePhoto) return showError('profilePhotoError', 'Please select a profile photo');
+    if (!profilePhoto.type.startsWith('image/')) return showError('profilePhotoError', 'Please select a valid image file');
+
+    // Clear stored data after successful submission
+    localStorage.removeItem('doctorFormData');
+
+    // If all validations pass, proceed to next step
+    alert('Validation successful! Proceeding to next step...');
+
+    // Redirect to next page
+    window.location.href = 'Step-2 professional-details.html';
+    return true;
+}
+
     </script>
 </body>
 

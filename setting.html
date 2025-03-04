@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
+    <title>User Settings</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -115,7 +114,6 @@
         .info-panel p {
             font-size: 14px;
         }
-
 
         .doctor-btn:hover {
             background-color: #1e7bb0;
@@ -236,70 +234,69 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
+        <!-- User Info Panel -->
         <div class="info-panel">
-            <h1>Hello, Friend!</h1>
-            <p>Enter your personal details and start your journey with us</p>
+            <h1>Update Your Details</h1>
+            <p>Change your personal information, such as name, email, and password.</p>
         </div>
 
+        <!-- Form to update user details -->
         <div class="form-container">
-            <h1>Register Yourself</h1>
-            <form action="registration.php" method="POST">
-                <input type="text" name="fullname" placeholder="Full Name" required>
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="tel" name="phone" placeholder="Phone Number" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <select name="gender" required>
-                    <option value="">Select a gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
-                <select name="bloodgroup" required>
-                    <option value="">Select Blood Group</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                </select>
-                <textarea name="address" placeholder="Address" required></textarea>
+            <h1>Account Settings</h1>
+            <form id="user-settings-form" method="POST" action="update_user_details.php">
+                <input type="hidden" name="user_id" id="user_id" value="">
+
+                <!-- Full Name -->
+                <input type="text" name="full_name" id="full_name" placeholder="Full Name" required>
+
+                <!-- Email -->
+                <input type="email" name="email" id="email" placeholder="Email" required>
+
+                <!-- Phone Number -->
+                <input type="text" name="phone" id="phone" placeholder="Phone Number" required>
+
+                <!-- Address -->
+                <textarea name="address" id="address" placeholder="Address" required></textarea>
+
+                <!-- Change Password -->
                 <div class="password-container">
-                    <input type="password" name="password" placeholder="Password" required id="password">
-                    <span class="eye-icon" onclick="togglePasswordVisibility('password')" id="eye-icon-password">
-                        👁️
-                    </span>
+                    <input type="password" name="new_password" id="new_password" placeholder="New Password">
+                    <span class="eye-icon" onclick="togglePasswordVisibility()">👁️</span>
                 </div>
-                <div class="password-container">
-                    <input type="password" name="cpassword" placeholder="Confirm Password" required id="cpassword">
-                    <span class="eye-icon" onclick="togglePasswordVisibility('cpassword')" id="eye-icon-cpassword">
-                        👁️
-                    </span>
-                </div>
-                <button type="submit">Register</button>
+
+                <button type="submit">Update Details</button>
             </form>
         </div>
     </div>
 
     <script>
-        function togglePasswordVisibility(id) {
-            const passwordField = document.getElementById(id);
-            const eyeIcon = document.getElementById('eye-icon-' + id);
+        // Function to toggle password visibility
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('new_password');
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+        }
 
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                eyeIcon.innerHTML = '🙈'; // Change to closed eye icon
-            } else {
-                passwordField.type = 'password';
-                eyeIcon.innerHTML = '👁️'; // Change back to open eye icon
-            }
+        // Fetch and populate the form fields with the current user details
+        window.onload = function() {
+            fetchUserDetails();
+        };
+
+        function fetchUserDetails() {
+            fetch('get_user_details.php')
+                .then(response => response.json())
+                .then(data => {
+                    // Assuming data is an object with the user details
+                    document.getElementById('user_id').value = data.user_id;
+                    document.getElementById('full_name').value = data.full_name;
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('phone').value = data.phone;
+                    document.getElementById('address').value = data.address;
+                })
+                .catch(error => console.error('Error fetching user details:', error));
         }
     </script>
 </body>
-
 </html>

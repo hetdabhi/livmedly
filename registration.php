@@ -20,6 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // Check if username contains uppercase letters
+    if (preg_match('/[A-Z]/', $username)) {
+        echo "<script>alert('Username must be in lowercase letters only!'); window.location.href='registration.html';</script>";
+        exit();
+    }
+
     // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "<script>alert('Invalid email format!'); window.location.href='registration.html';</script>";
@@ -47,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Email already exists!'); window.location.href='login.html';</script>";
         exit();
     }
+    $stmt->close();
 
     // Validate password and confirm password
     if ($password !== $cpassword) {
@@ -62,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssssssss", $name, $username, $phone, $email, $gender, $bloodgroup, $address, $hashed_password);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Registration successful!'); window.location.href='login.php';</script>";
+        echo "<script>alert('Registration successful!'); window.location.href='login.html';</script>";
     } else {
         echo "<script>alert('Error occurred! Please try again later.'); window.location.href='registration.html';</script>";
     }

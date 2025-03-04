@@ -29,17 +29,6 @@
             min-height: 100vh;
             padding: 15px;
             background-attachment: fixed;
-            animation: fadeInBody 1.5s ease-in-out;
-        }
-
-        @keyframes fadeInBody {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
         }
 
         .container {
@@ -55,7 +44,6 @@
             max-height: 90vh;
             overflow-y: auto;
             margin: 20px auto 0;
-            animation: fadeInContainer 1.5s ease-in-out;
         }
 
         .form-container {
@@ -63,7 +51,6 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            animation: fadeInForm 1s ease-in-out;
         }
 
         .info-panel {
@@ -81,16 +68,8 @@
         h1 {
             font-weight: bold;
             margin-bottom: 10px;
-            color: #000000;
+            color: #ffffff;
             font-size: 24px;
-        }
-
-        .info-panel h1 {
-            color: #FFFFFF;
-        }
-
-        .info-panel p {
-            font-size: 14px;
         }
 
         form {
@@ -100,8 +79,7 @@
         }
 
         input,
-        select,
-        textarea {
+        select {
             background-color: #eee;
             border: none;
             padding: 8px 12px;
@@ -109,13 +87,25 @@
             font-family: 'Montserrat', sans-serif;
             border-radius: 5px;
             font-size: 14px;
-            animation: fadeInInput 1s ease-in-out;
         }
 
-        textarea {
-            min-height: 60px;
-            resize: vertical;
-            max-height: 120px;
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
         }
 
         button {
@@ -129,18 +119,36 @@
             text-transform: uppercase;
             cursor: pointer;
             margin-top: 8px;
-            animation: fadeInButton 1s ease-in-out;
         }
 
         button:hover {
             background-color: #1e7bb0;
         }
 
-        .error {
-            color: #ff4444;
-            font-size: 12px;
-            margin-top: 4px;
+        .thank-you-message {
             display: none;
+            color: #004E92;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .home-button {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #004E92;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .home-button:hover {
+            background-color: #5DB2FF;
         }
 
         @media (max-width: 768px) {
@@ -167,39 +175,34 @@
     <div class="container">
         <div class="form-container">
             <h1>LivMedly Login</h1>
-            <form action="login_processing.php" method="POST">
-                <!-- Username / Email -->
+            <form id="loginForm">
                 <input type="text" name="username" placeholder="Username or Email" required>
 
-                <!-- Password -->
-                <input type="password" name="password" placeholder="Password" required>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                    <span id="togglePassword" class="toggle-password">👁️</span>
+                </div>
 
-                <!-- Role Selection -->
                 <select name="role" required>
                     <option value="Doctor">Doctor</option>
                     <option value="Administrator">Administrator</option>
                     <option value="Super Doctor">Super Doctor</option>
                 </select>
 
-                <!-- Emergency & Additional Details Section -->
                 <h2>Emergency & Additional Details</h2>
-
-                <!-- Alternate Contact Person -->
                 <input type="text" name="alternate_contact" placeholder="Alternate Contact Person (Spouse, Family)" required>
-
-                <!-- Emergency Contact Number -->
                 <input type="text" name="emergency_contact" placeholder="Emergency Contact Number" required>
-
-                <!-- Blood Group -->
                 <input type="text" name="blood_group" placeholder="Blood Group" required>
-
-                <!-- Medical Insurance Details -->
                 <input type="text" name="insurance_details" placeholder="Medical Insurance Details (if any)">
 
-                <button type="submit">Login</button>
-
-                <div class="error" id="error-message">Invalid credentials. Please try again.</div>
+                <button type="submit">Submit</button>
             </form>
+
+            <div class="thank-you-message" id="thankYouMessage">
+                Thank you for joining our LivMedly family! After verifying your data, you will become a member of our LivMedly family.
+            </div>
+
+            <button id="homeButton" class="home-button">Go to Home</button>
         </div>
 
         <div class="info-panel">
@@ -207,6 +210,34 @@
             <p>Your healthcare system access platform</p>
         </div>
     </div>
+
+    <script>
+        // Password Toggle Function
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+            togglePassword.innerHTML = passwordInput.type === "password" ? "👁️" : "🙈";
+        });
+
+        // Form Submission with Thank You Message
+        document.getElementById("loginForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent page refresh
+
+            // Hide the form
+            document.getElementById("loginForm").style.display = "none";
+
+            // Show thank-you message & home button
+            document.getElementById("thankYouMessage").style.display = "block";
+            document.getElementById("homeButton").style.display = "block";
+        });
+
+        // Redirect to Home Page when clicking the "Go to Home" button
+        document.getElementById("homeButton").addEventListener("click", function () {
+            window.location.href = "http://localhost/livmedly/"; // Change to your actual home page
+        });
+    </script>
 </body>
 
 </html>

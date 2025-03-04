@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background-attachment: fixed;
+            animation: fadeIn 1s ease-in-out;
+            overflow: auto;
+            padding: 20px;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 768px;
+            height: 360px;
+            max-width: 80%;
+            display: inline-flex;
+            overflow: hidden;
+            flex-direction: row;
+        }
+
+        .form-container {
+            width: 60%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: slideInRight 1s ease-out forwards;
+        }
+
+        @keyframes slideInRight {
+            0% {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-panel {
+            width: 40%;
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .info-panel img {
+            width: 80%;
+            max-width: 250px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000000;
+            text-align: center;
+            width: 80%;
+        }
+
+        h2 {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #000000;
+            text-align: center;
+            width: 100%;
+        }
+
+        .info-panel h1 {
+            color: #FFFFFF;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        input {
+            background-color: #eee;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 5px;
+            padding-right: 40px;
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 12px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1e7bb0;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Admin Login</h1>
+            <form id="adminLoginForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <div class="input-container">
+                    <input type="text" id="accessCode" placeholder="Admin Access Code" required>
+                    <span class="eye-icon" id="eyeIcon">👁️</span>
+                </div>
+                <p class="error" id="errorMessage">Invalid credentials or access code.</p>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        <div class="info-panel">
+            <h1>Welcome Back!</h1>
+            <p>Sign in to manage and control the admin dashboard.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Predefined Admin Credentials
+            const validUsername = "hetdabhi";
+            const validAccessCode = "666"; // Change this to your access code
+
+            const enteredUsername = document.getElementById('username').value;
+            const enteredAccessCode = document.getElementById('accessCode').value;
+
+            if (enteredUsername === validUsername && enteredAccessCode === validAccessCode) {
+                alert("Login Successful!");
+                window.location.href = "admin-dashboard.html"; // Redirect to admin panel
+            } else {
+                document.getElementById('errorMessage').style.display = "block";
+            }
+        });
+
+        // Toggle Access Code Visibility
+        const accessCodeInput = document.getElementById('accessCode');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        eyeIcon.addEventListener('click', function () {
+            if (accessCodeInput.type === "text") {
+                accessCodeInput.type = "password";
+                eyeIcon.innerHTML = '🙈'; // Hide
+            } else {
+                accessCodeInput.type = "text";
+                eyeIcon.innerHTML = '👁️'; // Show
+            }
+        });
+    </script>
+</body>
+</html>

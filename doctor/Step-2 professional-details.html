@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,8 +32,13 @@
         }
 
         @keyframes fadeInBody {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         .container {
@@ -53,7 +59,8 @@
 
         .info-panel {
             width: 40%;
-            background: linear-gradient(to right, #004E92, #5DB2FF); /* Reversed gradient direction */
+            background: linear-gradient(to right, #004E92, #5DB2FF);
+            /* Reversed gradient direction */
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -62,7 +69,8 @@
             text-align: center;
             padding: 20px;
             animation: slideInInfo 1.5s ease-in-out;
-            order: -1; /* This moves the info panel to the left */
+            order: -1;
+            /* This moves the info panel to the left */
         }
 
         .form-container {
@@ -158,7 +166,8 @@
 
         <div class="form-container">
             <h1>Professional Details</h1>
-            <form id="professionalDetailsForm" onsubmit="return validateForm(event)">
+            <form id="professionalDetailsForm" action="your-backend-endpoint" method="POST" onsubmit="return validateForm(event)">
+
                 <!-- Your existing form fields remain the same -->
                 <input type="text" id="doctorId" placeholder="Doctor ID / Employee ID *" required>
                 <div class="error" id="doctorIdError"></div>
@@ -232,9 +241,9 @@
         }
 
         function goBack() {
-    // Navigate to the previous page (Step-1.html in this case)
-    window.location.href = 'Step-1.html';
-}
+            // Navigate to the previous page (Step-1.html in this case)
+            window.location.href = 'Step-1.html';
+        }
 
         function validateAllFields() {
             // Doctor ID validation
@@ -308,6 +317,110 @@
                 error.style.display = 'none';
             });
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadFormData(); // Load saved form data when page loads
+        });
+
+        function validateForm(event) {
+            event.preventDefault();
+            clearErrors();
+
+            if (validateAllFields()) {
+                saveFormData(); // Save form data before navigation
+                window.location.href = 'Step-3 educational-certification.html';
+            }
+            return false;
+        }
+
+        function goBack() {
+            saveFormData(); // Save form data before going back
+            window.location.href = 'Step-1.html';
+        }
+
+        function validateAllFields() {
+            let isValid = true;
+
+            function checkField(id, minLength, errorMessage) {
+                const value = document.getElementById(id).value.trim();
+                if (value.length < minLength) {
+                    showError(id + 'Error', errorMessage);
+                    isValid = false;
+                }
+            }
+
+            checkField('doctorId', 4, 'Please enter a valid Doctor ID (minimum 4 characters)');
+            checkField('specialization', 3, 'Please enter a valid specialization');
+            checkField('roomNumber', 1, 'Please enter a valid room number');
+
+            if (!document.getElementById('department').value) {
+                showError('departmentError', 'Please select a department');
+                isValid = false;
+            }
+            if (!document.getElementById('designation').value) {
+                showError('designationError', 'Please select a designation');
+                isValid = false;
+            }
+            if (!document.getElementById('shift').value) {
+                showError('shiftError', 'Please select a shift');
+                isValid = false;
+            }
+
+            const experience = document.getElementById('experience').value;
+            if (experience < 0 || experience > 50) {
+                showError('experienceError', 'Please enter a valid experience (0-50 years)');
+                isValid = false;
+            }
+
+            const fees = document.getElementById('consultationFees').value;
+            if (fees <= 0) {
+                showError('feesError', 'Please enter valid consultation fees');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+
+        function saveFormData() {
+            const formData = {
+                doctorId: document.getElementById('doctorId').value,
+                department: document.getElementById('department').value,
+                specialization: document.getElementById('specialization').value,
+                designation: document.getElementById('designation').value,
+                experience: document.getElementById('experience').value,
+                consultationFees: document.getElementById('consultationFees').value,
+                shift: document.getElementById('shift').value,
+                roomNumber: document.getElementById('roomNumber').value
+            };
+            localStorage.setItem('professionalDetailsForm', JSON.stringify(formData));
+        }
+
+        function loadFormData() {
+            const savedData = JSON.parse(localStorage.getItem('professionalDetailsForm'));
+            if (savedData) {
+                document.getElementById('doctorId').value = savedData.doctorId || '';
+                document.getElementById('department').value = savedData.department || '';
+                document.getElementById('specialization').value = savedData.specialization || '';
+                document.getElementById('designation').value = savedData.designation || '';
+                document.getElementById('experience').value = savedData.experience || '';
+                document.getElementById('consultationFees').value = savedData.consultationFees || '';
+                document.getElementById('shift').value = savedData.shift || '';
+                document.getElementById('roomNumber').value = savedData.roomNumber || '';
+            }
+        }
     </script>
 </body>
+
 </html>

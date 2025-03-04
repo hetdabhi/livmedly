@@ -93,19 +93,6 @@ if (!empty($appointments)) {
             margin-bottom: 30px;
         }
 
-        .profile-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #fff;
-            margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #004E92;
-        }
-
         .sidebar-menu {
             list-style: none;
         }
@@ -231,7 +218,93 @@ if (!empty($appointments)) {
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="profile-section">
-                <div class="profile-image">USER</div>
+
+                <div class="profile-image">
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                    <div class="image-container">
+                        <img src="" id="profilePic" alt="User Profile" width="80" height="80" onclick="document.getElementById('imageUpload').click()">
+                        <span id="removeIcon" onclick="removeProfileImage()">🗑️</span>
+                    </div>
+                </div>
+
+                <style>
+                    .profile-image {
+                        text-align: center;
+                        cursor: pointer;
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .image-container {
+                        position: relative;
+                        display: inline-block;
+                    }
+
+                    .profile-image img {
+                        width: 80px;
+                        height: 80px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 2px solid #007bff;
+                        transition: opacity 0.3s;
+                    }
+
+                    .profile-image img:hover {
+                        opacity: 0.8;
+                    }
+
+                    #removeIcon {
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        background: red;
+                        color: white;
+                        border-radius: 50%;
+                        width: 20px;
+                        height: 20px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: background 0.3s;
+                    }
+
+                    #removeIcon:hover {
+                        background: darkred;
+                    }
+                </style>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        // Load saved image from localStorage
+                        const savedImage = localStorage.getItem("profileImage");
+                        if (savedImage) {
+                            document.getElementById("profilePic").src = savedImage;
+                        } else {
+                            document.getElementById("profilePic").src = "img/user.png"; // Default image
+                        }
+                    });
+
+                    function previewImage(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const imageSrc = e.target.result;
+                                document.getElementById("profilePic").src = imageSrc;
+                                localStorage.setItem("profileImage", imageSrc); // Save image in localStorage
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }
+
+                    function removeProfileImage() {
+                        document.getElementById("profilePic").src = "img/user.png"; // Reset to default image
+                        localStorage.removeItem("profileImage"); // Remove from localStorage
+                    }
+                </script>
+
                 <h3><?php echo $_SESSION['fullname'] ?></h3>
                 <p>Patient_id: <?php echo $_SESSION['user_id']; ?></p>
             </div>
@@ -240,9 +313,10 @@ if (!empty($appointments)) {
                 <li onclick="window.location.href='display-appointment.php'">My Appointment</li>
                 <li>Medical Records</li>
                 <li>Prescriptions</li>
-                <li>Messages</li>
-                <li onclick="window.location.href='bmi.html'">BMI Calculator</li>
-                <li>Settings</li>
+                <!-- <li>Messages</li> -->
+                <li onclick="window.location.href='chatbot/chatbot.html'">Chat Bot</li>
+                <li onclick="window.location.href='bmi/bmi.html'">BMI Calculator</li>
+                <li onclick="window.location.href='setting.html'">Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
             </ul>
         </div>
@@ -274,7 +348,6 @@ if (!empty($appointments)) {
                 </div>
                 <div class="quick-actions">
                     <button class="button" onclick="window.location.href='spinWheel/spinWheel.html'">
-                        <img src="spinWheel/spinwheel.png" alt="" width="30" height="30">
                         Spin Wheel
                     </button>
 
@@ -376,7 +449,6 @@ if (!empty($appointments)) {
                     </div>
                 </div>
             </div>
-
 </body>
 
 </html>
