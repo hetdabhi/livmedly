@@ -43,7 +43,7 @@
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             width: 768px;
-            height: 560px;
+            height: 520px;
             max-width: 80%;
             display: inline-flex;
             overflow: hidden;
@@ -130,7 +130,7 @@
             background-color: #1e7bb0;
         }
 
-        .social-container {
+        /* .social-container {
             margin: 20px 0;
             text-align: center;
             width: 100%;
@@ -148,7 +148,7 @@
             color: #333;
             text-decoration: none;
             transition: all 0.3s ease;
-        }
+        } */
 
         .social:hover {
             background: rgba(0, 0, 0, 0.1);
@@ -235,12 +235,13 @@
         </div>
         <div class="form-container">
             <h1>Log in</h1>
-            <div class="social-container">
+            <!-- <div class="social-container">
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
             </div>
-            <span>or use your account</span>
+            <span>or use your account</span> -->
+            <br>
             <form method="POST" action="login.php">
                 <div class="form-group" id="role-select">
                     <label for="role">Select Role:</label>
@@ -262,7 +263,8 @@
                         <input type="password" name="password" id="password" required>
                         <span class="eye-icon" id="togglePassword">👁️</span>
                     </div>
-                    <a href="forgot-password.html" class="forgot-password">Forgot your password?</a>
+                    <br> <center>
+                    <a href="forgot-password.html" class="forgot-password">Forgot your password?</a></center>
                 </div>
 
                 <button type="submit" name="login" class="btn-login">Login</button>

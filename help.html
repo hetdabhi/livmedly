@@ -42,9 +42,11 @@
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            width: 768px;
+            width: 800px;
+            /* Full screen width */
+            height: 600px;
+            /* Full screen height */
             max-width: 100%;
-            min-height: 400px;
             display: flex;
             overflow: hidden;
             opacity: 0;
@@ -62,6 +64,9 @@
         .help-section {
             width: 60%;
             padding: 25px;
+            height: 100%;
+            overflow-y: auto;
+            /* Scroll if content exceeds */
         }
 
         .info-panel {
@@ -73,6 +78,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
+            height: 100%;
         }
 
         h1 {
@@ -113,11 +119,19 @@
             margin-top: 20px;
         }
 
+        .contact-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            /* Adds space between input fields */
+        }
+
         input,
         textarea {
             background-color: #eee;
             border: none;
-            padding: 10px;
+            padding: 12px;
+            /* Increase padding for better spacing */
             width: 100%;
             font-family: 'Montserrat', sans-serif;
             border-radius: 5px;
@@ -128,14 +142,18 @@
         input:focus,
         textarea:focus {
             outline: none;
-            transform: scale(1.01);
+            transform: scale(1.02);
+            /* Slightly increased effect */
         }
 
         textarea {
             resize: vertical;
-            min-height: 100px;
-            max-height: 150px;
+            min-height: 120px;
+            /* Slightly taller */
+            max-height: 200px;
+            /* Allows better visibility for long messages */
         }
+
 
         button {
             border-radius: 20px;
@@ -189,6 +207,29 @@
         .social-links a:hover {
             transform: translateY(-3px);
         }
+
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                min-height: auto;
+                height: auto;
+                margin: 15px;
+            }
+
+            .contact-form,
+            .info-panel {
+                width: 100%;
+            }
+
+            .info-panel {
+                padding: 20px;
+            }
+
+            .social-links {
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -228,7 +269,7 @@
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>
                     <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-                    <button type="submit">Send Message</button>
+                    <center><button type="submit">Send Message</button></center>
                 </form>
             </div>
         </div>
