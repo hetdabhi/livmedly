@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discount Spin Wheel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 800px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(to right, #2196F3, #0D47A1);
+            color: white;
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            font-size: 16px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.13, 0.99);
+            transform: rotate(0deg);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            border: 10px solid #333;
+        }
+
+        .pointer-container {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .pointer {
+            width: 40px;
+            height: 40px;
+            background-color: #ff0000;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        .spin-btn {
+            padding: 15px 30px;
+            background-color: #283593;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 80%;
+            max-width: 500px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .spin-btn:hover {
+            background-color: #1a237e;
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 30px;
+            margin: 15px 0;
+            color: #283593;
+            text-align: center;
+        }
+
+        .attempts {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        /* Selector for desired discount */
+        .discount-selector {
+            margin: 15px 0;
+            padding: 10px;
+        }
+        
+        .discount-selector select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>How It Works</h2>
+            <p>Spin the wheel to get a discount! You can spin only three times per month.</p>
+        </div>
+        
+        <h1>Spin the Wheel for Discounts!</h1>
+        
+        <!-- Added a selector for the desired discount -->
+        <div class="discount-selector">
+            <label for="desired-discount">Choose the discount you want: </label>
+            <select id="desired-discount">
+                <option value="0">10%</option>
+                <option value="1">20%</option>
+                <option value="2">30%</option>
+                <option value="3">40%</option>
+                <option value="4">FREE</option>
+                <option value="5">50%</option>
+            </select>
+        </div>
+        
+        <div class="wheel-container">
+            <div class="pointer-container">
+                <div class="pointer"></div>
+            </div>
+            <div class="wheel" id="wheel"></div>
+        </div>
+        
+        <button class="spin-btn" id="spin-btn">Spin the Wheel!</button>
+        <div id="result"></div>
+        <div class="attempts" id="attempts">Remaining spins this month: 3</div>
+    </div>
+
+    <script>
+        // Wheel configuration with discount percentages
+        const sections = [
+            { text: "10%", color: "#1E88E5" },
+            { text: "20%", color: "#0D47A1" },
+            { text: "30%", color: "#1E88E5" },
+            { text: "40%", color: "#0D47A1" },
+            { text: "FREE", color: "#1E88E5" },
+            { text: "50%", color: "#0D47A1" }
+        ];
+
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spin-btn');
+        const resultDisplay = document.getElementById('result');
+        const attemptsDisplay = document.getElementById('attempts');
+        const desiredDiscountSelect = document.getElementById('desired-discount');
+        
+        let canSpin = true;
+        let currentRotation = 0;
+        let remainingSpins = 3;
+
+        // Create the wheel with SVG for better control
+        function createWheel() {
+            const numSections = sections.length;
+            const sectionAngle = 360 / numSections;
+            const radius = 200;
+            const center = radius;
+            
+            // Create SVG element
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("viewBox", `0 0 ${radius * 2} ${radius * 2}`);
+            
+            // Create wheel sections
+            sections.forEach((section, index) => {
+                // Calculate angles
+                const startAngle = index * sectionAngle;
+                const endAngle = (index + 1) * sectionAngle;
+                
+                // Convert angles to radians
+                const startRad = (startAngle - 90) * Math.PI / 180;
+                const endRad = (endAngle - 90) * Math.PI / 180;
+                
+                // Calculate points
+                const x1 = center + radius * Math.cos(startRad);
+                const y1 = center + radius * Math.sin(startRad);
+                const x2 = center + radius * Math.cos(endRad);
+                const y2 = center + radius * Math.sin(endRad);
+                
+                // Create pie slice path
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+                
+                path.setAttribute("d", `M ${center},${center} L ${x1},${y1} A ${radius},${radius} 0 ${largeArcFlag} 1 ${x2},${y2} Z`);
+                path.setAttribute("fill", section.color);
+                svg.appendChild(path);
+                
+                // Add text
+                const textAngle = startAngle + (sectionAngle / 2);
+                const textRad = (textAngle - 90) * Math.PI / 180;
+                const textX = center + (radius * 0.65) * Math.cos(textRad);
+                const textY = center + (radius * 0.65) * Math.sin(textRad);
+                
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", textX);
+                text.setAttribute("y", textY);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("dominant-baseline", "middle");
+                text.setAttribute("fill", "white");
+                text.setAttribute("font-size", "30");
+                text.setAttribute("font-weight", "bold");
+                text.setAttribute("transform", `rotate(${textAngle}, ${textX}, ${textY})`);
+                text.setAttribute("style", "text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7)");
+                text.textContent = section.text;
+                
+                svg.appendChild(text);
+            });
+            
+            wheel.appendChild(svg);
+        }
+
+        // Spin the wheel to a predetermined result
+        function spinWheel() {
+            if (!canSpin || remainingSpins <= 0) {
+                if (remainingSpins <= 0) {
+                    resultDisplay.textContent = 'No more spins available this month!';
+                }
+                return;
+            }
+            
+            canSpin = false;
+            resultDisplay.textContent = '';
+            
+            // Get the selected discount index
+            const desiredIndex = parseInt(desiredDiscountSelect.value);
+            
+            // Calculate the angle needed to land on the desired section
+            const sectionAngle = 360 / sections.length;
+            
+            // We need to calculate where the wheel should stop to have the pointer
+            // pointing at our desired section
+            // The pointer is at 0 degrees (top), so we need to calculate how much to rotate
+            // to get the desired section under the pointer
+            
+            // Each section's center is at (index * sectionAngle + sectionAngle/2)
+            // We need to rotate the opposite direction, and add some full rotations for effect
+            const desiredAngle = 360 - (desiredIndex * sectionAngle + sectionAngle/2);
+            
+            // Add 5-7 full rotations for effect (1800-2520 degrees) plus the angle to land on
+            // the desired section
+            const spinAngle = 1800 + (Math.floor(Math.random() * 3) * 360) + desiredAngle;
+            
+            // Update the current rotation
+            currentRotation += spinAngle;
+            
+            // Apply the rotation to the wheel
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+            
+            setTimeout(() => {
+                showResult(desiredIndex);
+                canSpin = true;
+                remainingSpins--;
+                attemptsDisplay.textContent = `Remaining spins this month: ${remainingSpins}`;
+            }, 5000);
+        }
+
+        // Show the result - now taking the index directly
+        function showResult(index) {
+            resultDisplay.textContent = `Congratulations! You won a ${sections[index].text} discount!`;
+        }
+
+        // Initialize the wheel
+        createWheel();
+        
+        // Event listeners
+        spinBtn.addEventListener('click', spinWheel);
+    </script>
+</body>
+</html>

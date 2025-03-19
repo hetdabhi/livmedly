@@ -38,10 +38,16 @@ $result = $stmt->get_result();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments</title>
+    <!-- ===============================================-->
+    <!--Favicons-->
+    <!-- ===============================================-->
+
+    <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
@@ -97,7 +103,7 @@ $result = $stmt->get_result();
             background: #f44336;
             color: white;
         }
-        
+
         .cancel-btn {
             background: #f44336;
             color: white;
@@ -106,13 +112,13 @@ $result = $stmt->get_result();
             cursor: pointer;
             border-radius: 5px;
         }
-        
+
         .cancel-btn:hover {
             background: #d32f2f;
         }
-
     </style>
 </head>
+
 <body>
 
     <h2>My Appointments</h2>
@@ -125,7 +131,7 @@ $result = $stmt->get_result();
                 $status = $row['status'];
 
                 // Automatically determine appointment status
-                if ($status !== "canceled") { 
+                if ($status !== "canceled") {
                     if ($appointment_date < $current_date || ($appointment_date == $current_date && $appointment_time < $current_time)) {
                         $status = "completed";
                     } else {
@@ -158,6 +164,7 @@ $result = $stmt->get_result();
     </div>
 
 </body>
+
 </html>
 
 <?php

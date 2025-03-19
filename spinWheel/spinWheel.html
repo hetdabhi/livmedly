@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spin Wheel Discount</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    
+    <!-- ===============================================-->
+    <!--Favicons-->
+    <!-- ===============================================-->
+
+    <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Montserrat', sans-serif;
         }
+
         body {
             display: flex;
             justify-content: center;
@@ -22,6 +31,7 @@
             padding: 20px;
             flex-direction: column;
         }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -34,6 +44,7 @@
             padding: 20px;
             text-align: center;
         }
+
         .info-panel {
             background: linear-gradient(to right, #5DB2FF, #004E92);
             color: white;
@@ -42,12 +53,15 @@
             text-align: center;
             border-radius: 10px 10px 0 0;
         }
+
         .calculator-panel {
             margin-top: 20px;
         }
+
         .wheel-container {
             position: relative;
         }
+
         #wheel {
             width: 300px;
             height: 300px;
@@ -58,6 +72,7 @@
             transition: transform 5s ease-out;
             margin: 20px auto;
         }
+
         .arrow {
             position: absolute;
             top: 275px;
@@ -70,6 +85,7 @@
             border-bottom: 20px solid red;
             z-index: 10;
         }
+
         .segment {
             position: absolute;
             width: 50%;
@@ -86,12 +102,37 @@
             text-align: center;
             line-height: 1.5;
         }
-        .segment:nth-child(1) { transform: rotate(0deg); background-color: #007bff; }
-        .segment:nth-child(2) { transform: rotate(60deg); background-color: #0056b3; }
-        .segment:nth-child(3) { transform: rotate(120deg); background-color: #004085; }
-        .segment:nth-child(4) { transform: rotate(180deg); background-color: #0056b3; }
-        .segment:nth-child(5) { transform: rotate(240deg); background-color: #007bff; }
-        .segment:nth-child(6) { transform: rotate(300deg); background-color: #004085; }
+
+        .segment:nth-child(1) {
+            transform: rotate(0deg);
+            background-color: #007bff;
+        }
+
+        .segment:nth-child(2) {
+            transform: rotate(60deg);
+            background-color: #0056b3;
+        }
+
+        .segment:nth-child(3) {
+            transform: rotate(120deg);
+            background-color: #004085;
+        }
+
+        .segment:nth-child(4) {
+            transform: rotate(180deg);
+            background-color: #0056b3;
+        }
+
+        .segment:nth-child(5) {
+            transform: rotate(240deg);
+            background-color: #007bff;
+        }
+
+        .segment:nth-child(6) {
+            transform: rotate(300deg);
+            background-color: #004085;
+        }
+
         button {
             width: 100%;
             padding: 12px;
@@ -103,8 +144,17 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        button:hover { background: #1e7bb0; }
-        #results { margin-top: 15px; font-weight: bold; font-size: 16px; }
+
+        button:hover {
+            background: #1e7bb0;
+        }
+
+        #results {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
         #coupon {
             background: #28a745;
             color: white;
@@ -116,63 +166,65 @@
         }
     </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="info-panel">
-        <h2>How It Works</h2>
-        <p>Spin the wheel to get a discount! You can spin only three times per month.</p>
-    </div>
-    <div class="calculator-panel">
-        <h1>Spin the Wheel for Discounts!</h1>
-        <div class="wheel-container">
-            <div class="arrow"></div>
-            <div id="wheel">
-                <div class="segment">10%</div>
-                <div class="segment">20%</div>
-                <div class="segment">30%</div>
-                <div class="segment">40%</div>
-                <div class="segment">50%</div>
-                <div class="segment">Free</div>
-            </div>
+    <div class="container">
+        <div class="info-panel">
+            <h2>How It Works</h2>
+            <p>Spin the wheel to get a discount! You can spin only three times per month.</p>
         </div>
-        <button id="spinButton">Spin the Wheel!</button>
-        <div id="results"></div>
-        <div id="coupon"></div>
+        <div class="calculator-panel">
+            <h1>Spin the Wheel for Discounts!</h1>
+            <div class="wheel-container">
+                <div class="arrow"></div>
+                <div id="wheel">
+                    <div class="segment">10%</div>
+                    <div class="segment">20%</div>
+                    <div class="segment">30%</div>
+                    <div class="segment">40%</div>
+                    <div class="segment">50%</div>
+                    <div class="segment">Free</div>
+                </div>
+            </div>
+            <button id="spinButton">Spin the Wheel!</button>
+            <div id="results"></div>
+            <div id="coupon"></div>
+        </div>
     </div>
-</div>
-<script>
-function generateCoupon() {
-    return 'DISCOUNT-' + Math.random().toString(36).substr(2, 8).toUpperCase();
-}
-function canSpin() {
-    const spins = parseInt(localStorage.getItem('spins')) || 0;
-    const lastSpinMonth = localStorage.getItem('lastSpinMonth');
-    const currentMonth = new Date().getMonth();
-    if (lastSpinMonth !== String(currentMonth)) {
-        localStorage.setItem('spins', '0');
-        localStorage.setItem('lastSpinMonth', String(currentMonth));
-        return true;
-    }
-    return spins < 3;
-}
-document.getElementById('spinButton').addEventListener('click', function() {
-    if (!canSpin()) {
-        alert("You can only spin three times per month. Try again later!");
-        return;
-    }
-    const spins = parseInt(localStorage.getItem('spins')) || 0;
-    localStorage.setItem('spins', String(spins + 1));
-    const wheel = document.getElementById('wheel');
-    const randomDegree = Math.floor(Math.random() * 360 + 720);
-    wheel.style.transform = `rotate(${randomDegree}deg)`;
-    setTimeout(() => {
-        const resultIndex = Math.floor(((randomDegree % 360) / 60));
-        const discounts = ['10%', '20%', '30%', '40%', '50%', 'Free'];
-        document.getElementById('results').innerText = `You won a ${discounts[resultIndex]} discount!`;
-        document.getElementById('coupon').innerText = `Your coupon code: ${generateCoupon()}`;
-        document.getElementById('coupon').style.display = 'block';
-    }, 4000);
-});
-</script>
+    <script>
+        function generateCoupon() {
+            return 'DISCOUNT-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+        function canSpin() {
+            const spins = parseInt(localStorage.getItem('spins')) || 0;
+            const lastSpinMonth = localStorage.getItem('lastSpinMonth');
+            const currentMonth = new Date().getMonth();
+            if (lastSpinMonth !== String(currentMonth)) {
+                localStorage.setItem('spins', '0');
+                localStorage.setItem('lastSpinMonth', String(currentMonth));
+                return true;
+            }
+            return spins < 3;
+        }
+        document.getElementById('spinButton').addEventListener('click', function () {
+            if (!canSpin()) {
+                alert("You can only spin three times per month. Try again later!");
+                return;
+            }
+            const spins = parseInt(localStorage.getItem('spins')) || 0;
+            localStorage.setItem('spins', String(spins + 1));
+            const wheel = document.getElementById('wheel');
+            const randomDegree = Math.floor(Math.random() * 360 + 720);
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            setTimeout(() => {
+                const resultIndex = Math.floor(((randomDegree % 360) / 60));
+                const discounts = ['10%', '20%', '30%', '40%', '50%', 'Free'];
+                document.getElementById('results').innerText = `You won a ${discounts[resultIndex]} discount!`;
+                document.getElementById('coupon').innerText = `Your coupon code: ${generateCoupon()}`;
+                document.getElementById('coupon').style.display = 'block';
+            }, 4000);
+        });
+    </script>
 </body>
+
 </html>
