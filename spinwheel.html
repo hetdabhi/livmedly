@@ -6,54 +6,48 @@
     <title>Discount Spin Wheel</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            max-width: 800px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .header {
-            background: linear-gradient(to right, #2196F3, #0D47A1);
+            background: linear-gradient(to right, #1e88e5, #0d47a1);
             color: white;
             width: 100%;
+            max-width: 600px;
             padding: 15px 0;
             text-align: center;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .header h2 {
             margin: 0;
-            font-size: 24px;
+            font-size: 20px;
+            font-weight: 700;
         }
 
         .header p {
             margin: 5px 0 0;
-            font-size: 16px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
         .wheel-container {
             position: relative;
-            width: 400px;
-            height: 400px;
-            margin: 20px 0;
+            width: 280px;
+            height: 280px;
+            margin: 15px 0;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
         }
 
         .wheel {
@@ -63,133 +57,242 @@
             position: relative;
             transition: transform 5s cubic-bezier(0.17, 0.67, 0.13, 0.99);
             transform: rotate(0deg);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            border: 10px solid #333;
+            border: 8px solid #0d47a1;
+            overflow: hidden;
         }
 
         .pointer-container {
             position: absolute;
-            top: -20px;
+            top: -25px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
         }
 
         .pointer {
             width: 40px;
             height: 40px;
-            background-color: #ff0000;
+            background-color: #0d47a1;
             clip-path: polygon(50% 100%, 0 0, 100% 0);
+            position: relative;
+        }
+
+        /* Adding inner indicator for the pointer */
+        .pointer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 25px;
+            background-color: white;
         }
 
         .spin-btn {
-            padding: 15px 30px;
-            background-color: #283593;
+            padding: 12px 25px;
+            background: linear-gradient(to right, #1e88e5, #0d47a1);
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 18px;
+            border-radius: 50px;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
             width: 80%;
-            max-width: 500px;
+            max-width: 250px;
             margin: 15px 0;
-            font-weight: bold;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(30, 136, 229, 0.4);
         }
 
         .spin-btn:hover {
-            background-color: #1a237e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(30, 136, 229, 0.5);
+        }
+
+        .spin-btn:active {
+            transform: translateY(1px);
         }
 
         #result {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 700;
             min-height: 30px;
             margin: 15px 0;
-            color: #283593;
+            color: #1e88e5;
             text-align: center;
+            padding: 0 15px;
+            transition: all 0.3s ease;
         }
 
         .attempts {
             font-size: 14px;
-            color: #666;
+            color: #555;
             margin-top: 10px;
+            font-weight: 500;
         }
         
-        /* Selector for desired discount */
-        .discount-selector {
-            margin: 15px 0;
-            padding: 10px;
+        h1 {
+            text-align: center;
+            margin: 10px 0;
+            color: #0d47a1;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        /* Animation for the result */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-animation {
+            animation: fadeIn 0.5s ease-out forwards;
         }
         
-        .discount-selector select {
-            padding: 8px;
+        /* Discount code container styles */
+        .discount-code-container {
+            margin-top: 15px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            display: none;
+        }
+        
+        .discount-code-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .discount-code-label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .discount-code-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .discount-code {
+            background: linear-gradient(to right, #1e88e5, #0d47a1);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px 0 0 6px;
+            font-weight: bold;
             font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .copy-btn {
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .copy-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .copy-message {
+            font-size: 12px;
+            color: #4caf50;
+            height: 20px;
+            margin-top: 5px;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .copy-message.show {
+            opacity: 1;
+        }
+        
+        .category {
+            font-size: 14px;
+            color: #333;
+            margin-top: 5px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>How It Works</h2>
-            <p>Spin the wheel to get a discount! You can spin only three times per month.</p>
+    <div class="header">
+        <h2>Medical Discount Wheel</h2>
+        <p>Spin to win exclusive discounts on medical products!</p>
+    </div>
+    
+    <h1>Spin For Discounts</h1>
+    <br>
+    
+    <div class="wheel-container">
+        <div class="pointer-container">
+            <div class="pointer"></div>
         </div>
-        
-        <h1>Spin the Wheel for Discounts!</h1>
-        
-        <!-- Added a selector for the desired discount -->
-        <div class="discount-selector">
-            <label for="desired-discount">Choose the discount you want: </label>
-            <select id="desired-discount">
-                <option value="0">10%</option>
-                <option value="1">20%</option>
-                <option value="2">30%</option>
-                <option value="3">40%</option>
-                <option value="4">FREE</option>
-                <option value="5">50%</option>
-            </select>
+        <div class="wheel" id="wheel"></div>
+    </div>
+    
+    <button class="spin-btn" id="spin-btn">Spin Now!</button>
+    <div id="result"></div>
+    <div class="attempts" id="attempts">Remaining spins this month: 3</div>
+    
+    <!-- Discount code container -->
+    <div class="discount-code-container" id="discount-code-container">
+        <div class="discount-code-label">Your Discount Code:</div>
+        <div class="discount-code-box">
+            <div class="discount-code" id="discount-code">MED20OFF</div>
+            <button class="copy-btn" id="copy-btn">Copy</button>
         </div>
-        
-        <div class="wheel-container">
-            <div class="pointer-container">
-                <div class="pointer"></div>
-            </div>
-            <div class="wheel" id="wheel"></div>
-        </div>
-        
-        <button class="spin-btn" id="spin-btn">Spin the Wheel!</button>
-        <div id="result"></div>
-        <div class="attempts" id="attempts">Remaining spins this month: 3</div>
+        <div class="copy-message" id="copy-message">Copied to clipboard!</div>
+        <div class="category" id="category">Valid for all medical products</div>
     </div>
 
     <script>
-        // Wheel configuration with discount percentages
+        // Wheel configuration with discount percentages - using blue gradient colors
         const sections = [
-            { text: "10%", color: "#1E88E5" },
-            { text: "20%", color: "#0D47A1" },
-            { text: "30%", color: "#1E88E5" },
-            { text: "40%", color: "#0D47A1" },
-            { text: "FREE", color: "#1E88E5" },
-            { text: "50%", color: "#0D47A1" }
+            { text: "10%", color: "#64b5f6", code: "MED10OFF", category: "Valid for all medical products" },
+            { text: "20%", color: "#42a5f5", code: "MED20OFF", category: "Valid for all medical products" },
+            { text: "30%", color: "#2196f3", code: "MED30OFF", category: "Valid for all medical products" },
+            { text: "40%", color: "#1e88e5", code: "MED40OFF", category: "Valid for all medical products" },
+            { text: "FREE", color: "#1976d2", code: "MEDFREE", category: "Free medical consultation" },
+            { text: "50%", color: "#0d47a1", code: "MED50OFF", category: "Valid for all medical products" }
         ];
 
         const wheel = document.getElementById('wheel');
         const spinBtn = document.getElementById('spin-btn');
         const resultDisplay = document.getElementById('result');
         const attemptsDisplay = document.getElementById('attempts');
-        const desiredDiscountSelect = document.getElementById('desired-discount');
+        const discountCodeContainer = document.getElementById('discount-code-container');
+        const discountCodeElement = document.getElementById('discount-code');
+        const categoryElement = document.getElementById('category');
+        const copyBtn = document.getElementById('copy-btn');
+        const copyMessage = document.getElementById('copy-message');
         
         let canSpin = true;
         let currentRotation = 0;
         let remainingSpins = 3;
+        let spinCount = 0;
 
         // Create the wheel with SVG for better control
         function createWheel() {
             const numSections = sections.length;
             const sectionAngle = 360 / numSections;
-            const radius = 200;
+            const radius = 140; // Smaller radius for mobile
             const center = radius;
             
             // Create SVG element
@@ -220,6 +323,33 @@
                 
                 path.setAttribute("d", `M ${center},${center} L ${x1},${y1} A ${radius},${radius} 0 ${largeArcFlag} 1 ${x2},${y2} Z`);
                 path.setAttribute("fill", section.color);
+                
+                // Add shine effect
+                const gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+                gradient.setAttribute("id", `gradient-${index}`);
+                gradient.setAttribute("x1", "0%");
+                gradient.setAttribute("y1", "0%");
+                gradient.setAttribute("x2", "100%");
+                gradient.setAttribute("y2", "100%");
+                
+                const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop1.setAttribute("offset", "0%");
+                stop1.setAttribute("stop-color", "rgba(255, 255, 255, 0.2)");
+                
+                const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop2.setAttribute("offset", "100%");
+                stop2.setAttribute("stop-color", "rgba(0, 0, 0, 0.1)");
+                
+                gradient.appendChild(stop1);
+                gradient.appendChild(stop2);
+                
+                const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+                defs.appendChild(gradient);
+                svg.appendChild(defs);
+                
+                path.setAttribute("fill", section.color);
+                path.setAttribute("stroke", "#fff");
+                path.setAttribute("stroke-width", "2");
                 svg.appendChild(path);
                 
                 // Add text
@@ -234,7 +364,7 @@
                 text.setAttribute("text-anchor", "middle");
                 text.setAttribute("dominant-baseline", "middle");
                 text.setAttribute("fill", "white");
-                text.setAttribute("font-size", "30");
+                text.setAttribute("font-size", "24"); // Smaller font size
                 text.setAttribute("font-weight", "bold");
                 text.setAttribute("transform", `rotate(${textAngle}, ${textX}, ${textY})`);
                 text.setAttribute("style", "text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7)");
@@ -246,7 +376,24 @@
             wheel.appendChild(svg);
         }
 
-        // Spin the wheel to a predetermined result
+        // Fixed function to calculate the actual section pointed to by the arrow
+        function getPointedSection(rotation) {
+            const numSections = sections.length;
+            const sectionAngle = 360 / numSections;
+            
+            // Normalize rotation to positive values within 0-360
+            let normalizedRotation = rotation % 360;
+            if (normalizedRotation < 0) normalizedRotation += 360;
+            
+            // Calculate which section the pointer is pointing at
+            // The wheel spins clockwise, so we invert the angle to get the correct section
+            const pointerAngle = (360 - normalizedRotation) % 360;
+            
+            // Determine which section this points to
+            return Math.floor(pointerAngle / sectionAngle) % numSections;
+        }
+
+        // Spin the wheel randomly
         function spinWheel() {
             if (!canSpin || remainingSpins <= 0) {
                 if (remainingSpins <= 0) {
@@ -257,25 +404,25 @@
             
             canSpin = false;
             resultDisplay.textContent = '';
+            resultDisplay.classList.remove('result-animation');
+            discountCodeContainer.classList.remove('active');
             
-            // Get the selected discount index
-            const desiredIndex = parseInt(desiredDiscountSelect.value);
+            // Increment spin count
+            spinCount++;
             
-            // Calculate the angle needed to land on the desired section
+            // Randomly select a section
+            const randomIndex = Math.floor(Math.random() * sections.length);
+            
+            // Calculate the angle needed to land on the random section
             const sectionAngle = 360 / sections.length;
             
             // We need to calculate where the wheel should stop to have the pointer
-            // pointing at our desired section
-            // The pointer is at 0 degrees (top), so we need to calculate how much to rotate
-            // to get the desired section under the pointer
+            // pointing at our randomly selected section
+            // Calculate degrees to rotate to center the selected section at the top
+            const targetAngle = 360 - (randomIndex * sectionAngle + sectionAngle/2);
             
-            // Each section's center is at (index * sectionAngle + sectionAngle/2)
-            // We need to rotate the opposite direction, and add some full rotations for effect
-            const desiredAngle = 360 - (desiredIndex * sectionAngle + sectionAngle/2);
-            
-            // Add 5-7 full rotations for effect (1800-2520 degrees) plus the angle to land on
-            // the desired section
-            const spinAngle = 1800 + (Math.floor(Math.random() * 3) * 360) + desiredAngle;
+            // Add multiple full rotations for effect
+            const spinAngle = 1800 + (Math.floor(Math.random() * 3) * 360) + targetAngle;
             
             // Update the current rotation
             currentRotation += spinAngle;
@@ -284,17 +431,52 @@
             wheel.style.transform = `rotate(${currentRotation}deg)`;
             
             setTimeout(() => {
-                showResult(desiredIndex);
+                // Calculate which section the pointer is pointing at
+                const resultIndex = getPointedSection(currentRotation);
+                
+                // Show result with animation
+                showResult(resultIndex);
+                
                 canSpin = true;
                 remainingSpins--;
                 attemptsDisplay.textContent = `Remaining spins this month: ${remainingSpins}`;
             }, 5000);
         }
 
-        // Show the result - now taking the index directly
+        // Show the result
         function showResult(index) {
-            resultDisplay.textContent = `Congratulations! You won a ${sections[index].text} discount!`;
+            const section = sections[index];
+            
+            resultDisplay.classList.add('result-animation');
+            resultDisplay.textContent = `Congratulations! You won a ${section.text} discount!`;
+            
+            // Display the discount code
+            discountCodeElement.textContent = section.code;
+            categoryElement.textContent = section.category;
+            discountCodeContainer.classList.add('active');
         }
+        
+        // Copy discount code to clipboard
+        copyBtn.addEventListener('click', function() {
+            // Create a temporary textarea element to copy from
+            const textarea = document.createElement('textarea');
+            textarea.value = discountCodeElement.textContent;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                copyMessage.classList.add('show');
+                
+                setTimeout(() => {
+                    copyMessage.classList.remove('show');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy discount code', err);
+            }
+            
+            document.body.removeChild(textarea);
+        });
 
         // Initialize the wheel
         createWheel();
