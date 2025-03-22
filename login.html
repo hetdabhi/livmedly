@@ -67,7 +67,7 @@
 
         .info-panel {
             width: 40%;
-            background: linear-gradient(to right, #5DB2FF, #004E92);
+            background: linear-gradient(to bottom, #5DB2FF, #004E92);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -230,6 +230,25 @@
                 padding: 20px;
             }
         }
+
+        .btn-nav {
+            border-radius: 20px;
+            border: 1px solid #fff;
+            background-color: transparent;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background-color: #FFFFFF;
+            color: #004E92;
+        }
     </style>
 </head>
 
@@ -239,6 +258,8 @@
             <h1>Welcome Back!</h1>
             <p>Enter your credentials to access your account</p>
             <img src="" alt="" class="info-image" />
+            <br>
+            <button onclick="location.href='index.html'" class="btn-nav">Home</button>
         </div>
         <div class="form-container">
             <h1>Log in</h1>
@@ -286,7 +307,7 @@
     <script>
         document.getElementById("role").addEventListener("change", function () {
             if (this.value === "admin") {
-                window.location.href = "admin-login.html"; // Redirect to admin login page
+                window.location.href = "admin/admin-login.html"; // Redirect to admin login page
             }
         });
 

@@ -321,7 +321,7 @@ if (!empty($appointments)) {
                 <!-- <li>Messages</li> -->
                 <li onclick="window.location.href='chatbot/chatbot.html'">Chat Bot</li>
                 <li onclick="window.location.href='bmi/bmi.html'">BMI Calculator</li>
-                <li onclick="window.location.href='user_settings.php'">Settings</li>
+                <li onclick="window.location.href='user-settings.php'">Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
             </ul>
         </div>

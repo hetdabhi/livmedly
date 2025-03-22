@@ -97,7 +97,7 @@
 
         .info-panel {
             width: 40%;
-            background: linear-gradient(to right, #5DB2FF, #004E92);
+            background: linear-gradient(to bottom, #5DB2FF, #004E92);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -240,6 +240,25 @@
                 padding: 12px;
             }
         }
+
+        .btn-nav {
+            border-radius: 20px;
+            border: 1px solid #fff;
+            background-color: transparent;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background-color: #FFFFFF;
+            color: #004E92;
+        }
     </style>
 </head>
 
@@ -248,6 +267,8 @@
         <div class="info-panel">
             <h1>Hello, Friend!</h1>
             <p>Enter your personal details and start your journey with us</p>
+            <br>
+            <button onclick="location.href='index.html'" class="btn-nav">Home</button>
         </div>
 
         <div class="form-container">

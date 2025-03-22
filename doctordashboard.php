@@ -36,14 +36,14 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LivMedly - Doctor Dashboard</title>
 
-    
+
     <!-- ===============================================-->
     <!--Favicons-->
     <!-- ===============================================-->
 
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
 
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
 
@@ -79,22 +79,60 @@ $stmt->close();
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .doctor-avatar {
+        /* Profile Image Container */
+        .profile-image {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .image-container img {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: #fff;
-            margin: 0 auto 10px;
+            object-fit: cover;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+
+        .image-container img:hover {
+            opacity: 0.8;
+        }
+
+        #removeIcon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 16px;
+            width: 24px;
+            height: 24px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 40px;
-            color: #004E92;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            transition: 0.3s ease-in-out;
+        }
+
+        .image-container:hover #removeIcon {
+            opacity: 1;
         }
 
         .doctor-name {
             font-weight: 600;
-            margin: 10px 0 5px;
+            margin-top: 10px;
+            font-size: 18px;
         }
 
         .doctor-specialty {
@@ -224,14 +262,33 @@ $stmt->close();
         .button:hover {
             transform: scale(1.05);
         }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-img {
+            display: block;
+            width: 100px;
+            /* Adjust size */
+            height: 100px;
+            /* Adjust size */
+            border-radius: 50%;
+            /* Makes it circular */
+            margin: 10px auto;
+            /* Centers the image */
+        }
+
     </style>
 </head>
 
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
+        <h2>LivMedly</h2>
+        <img src="img/doctor.png" alt="Profile Image" class="profile-img">
             <div class="doctor-profile">
-                <div class="doctor-avatar">👨‍⚕️</div>
+                <!-- <div class="doctor-avatar">👨‍⚕️</div> -->
                 <div class="doctor-name">Dr. <?php echo htmlspecialchars($name); ?></div>
                 <div class="doctor-specialty"><?php echo htmlspecialchars($specialization); ?></div>
             </div>
@@ -240,10 +297,10 @@ $stmt->close();
                 <li>Appointments</li>
                 <li>Patient Records</li>
                 <li onclick="window.location.href='prescription.php'">Prescriptions</li>
-                <li>Lab Results</li>
+                <!-- <li>Lab Results</li> -->
                 <li>Messages</li>
-                <li>Schedule Management</li>
-                <li onclick="window.location.href='doctor_settings.php'">Profile Settings</li>
+                <!-- <li>Schedule Management</li> -->
+                <li onclick="window.location.href='doctor-settings.php'">Profile Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
             </ul>
         </div>

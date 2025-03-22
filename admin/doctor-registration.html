@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Registration</title>
+
+    <!-- ===============================================-->
+    <!--Favicons-->
+    <!-- ===============================================-->
+
+    <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 700px;
+            max-width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .left-panel {
+            background: linear-gradient(to right, #5DB2FF, #004E92);
+            color: white;
+            width: 35%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .left-panel h2 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .right-panel {
+            width: 65%;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #1e7bb0;
+            background-color: #283779;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            background: #283779;
+            color: white;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1e7bb0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h2>Admin Panel <br> Register a Doctor</h2>
+        </div>
+        <div class="right-panel">
+            <h1>Doctor Registration</h1>
+            <form action="doctor-registration.php" method="POST">
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="phone_number" placeholder="Phone Number" required>
+                <select name="gender" required>
+                    <option value="">Select a gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select name="specialization" required>
+                    <option value="">Select Specialization</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                    <option value="Neurologist">Neurologist</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="Orthopedic">Orthopedic</option>
+                    <option value="General Physician">General Physician</option>
+                </select>
+                <input type="text" name="address" placeholder="Address" required>
+                <div class="password-container">
+                    <input type="password" name="password" id="passwordField" placeholder="Password" required>
+                    <span class="password-toggle" onclick="togglePassword('passwordField', 'eyeIcon1')"
+                        id="eyeIcon1">👁️</span>
+                </div>
+                <div class="password-container">
+                    <input type="password" name="confirm_password" id="confirmPasswordField"
+                        placeholder="Confirm Password" required>
+                    <span class="password-toggle" onclick="togglePassword('confirmPasswordField', 'eyeIcon2')"
+                        id="eyeIcon2">👁️</span>
+                </div>
+                <textarea name="qualifications" placeholder="Qualifications" required></textarea>
+                <button type="submit">Register Doctor</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(fieldId, iconId) {
+            var passwordField = document.getElementById(fieldId);
+            var eyeIcon = document.getElementById(iconId);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.innerHTML = '🙈';
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.innerHTML = '👁️';
+            }
+        }
+    </script>
+</body>
+
+</html>

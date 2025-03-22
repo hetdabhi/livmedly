@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
 
-    
+
     <!-- ===============================================-->
     <!--Favicons-->
     <!-- ===============================================-->
 
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -39,6 +40,7 @@
             0% {
                 opacity: 0;
             }
+
             100% {
                 opacity: 1;
             }
@@ -70,6 +72,7 @@
                 opacity: 0;
                 transform: translateX(50px);
             }
+
             100% {
                 opacity: 1;
                 transform: translateX(0);
@@ -78,7 +81,7 @@
 
         .info-panel {
             width: 40%;
-            background: linear-gradient(to right, #5DB2FF, #004E92);
+            background: linear-gradient(to bottom, #5DB2FF, #004E92);
             color: #FFFFFF;
             display: flex;
             flex-direction: column;
@@ -168,8 +171,28 @@
             font-size: 14px;
             display: none;
         }
+
+        .btn-nav {
+            border-radius: 20px;
+            border: 1px solid #fff;
+            background-color: transparent;
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            background-color: #FFFFFF;
+            color: #004E92;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="form-container">
@@ -187,23 +210,25 @@
         <div class="info-panel">
             <h1>Welcome Back!</h1>
             <p>Sign in to manage and control the admin dashboard.</p>
+            <!-- <br>
+            <button onclick="location.href='C:/xampp/htdocs/livmedly/index.html'" class="btn-nav">Home</button> -->
         </div>
     </div>
 
     <script>
-        document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+        document.getElementById('adminLoginForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
             // Predefined Admin Credentials
-            const validUsername = "hetdabhi";
-            const validAccessCode = "666"; // Change this to your access code
+            const validUsername = "Het Dabhi";
+            const validAccessCode = "LM@2025"; // Change this to your access code
 
             const enteredUsername = document.getElementById('username').value;
             const enteredAccessCode = document.getElementById('accessCode').value;
 
             if (enteredUsername === validUsername && enteredAccessCode === validAccessCode) {
                 alert("Login Successful!");
-                window.location.href = "admin-dashboard.html"; // Redirect to admin panel
+                window.location.href = "admindashboard.html"; // Redirect to admin panel
             } else {
                 document.getElementById('errorMessage').style.display = "block";
             }
@@ -224,4 +249,5 @@
         });
     </script>
 </body>
+
 </html>
