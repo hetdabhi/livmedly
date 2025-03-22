@@ -1,32 +1,49 @@
 <?php
-session_start();
+session_start(); // Must be the first line
 include 'config.php';
 
-// Check if the doctor is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "<script>alert('Please log in first!'); window.location.href='doctor_login.html';</script>";
-    exit();
+// Check if doctor is logged in
+if (!isset($_SESSION['doctor_id']) || empty($_SESSION['doctor_id'])) {
+    die("<script>alert('Error: Doctor session lost. Please login again.'); window.location.href='login.php';</script>");
 }
 
-$user_id = $_SESSION['user_id'];
+// Fetch doctor details
+$doctor_id = $_SESSION['doctor_id'];
+$name = "Unknown";
+$specialization = "Not Set";
 
-// Fetch doctor details from the database
-$stmt = $conn->prepare("SELECT name, email, phone_number, gender, blood_group, specialization, address FROM doctor WHERE id = ?");
-$stmt->bind_param("i", $user_id);
+// Fetch doctor details from database
+$stmt = $conn->prepare("SELECT name, specialization FROM doctor WHERE id = ?");
+$stmt->bind_param("i", $doctor_id);
 $stmt->execute();
-$stmt->bind_result($name, $email, $phone, $gender, $blood_group, $specialization, $address);
-$stmt->fetch();
-$stmt->close();
+$result = $stmt->get_result();
 
+if ($row = $result->fetch_assoc()) {
+    $name = $row['name'];
+    $specialization = $row['specialization'];
+} else {
+    die("<script>alert('Doctor details not found.'); window.history.back();</script>");
+}
+$stmt->close();
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LivMedly - Doctor Dashboard</title>
+
+    
+    <!-- ===============================================-->
+    <!--Favicons-->
+    <!-- ===============================================-->
+
+    <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
+
+    
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600,800');
 
@@ -151,7 +168,8 @@ $stmt->close();
             margin-bottom: 30px;
         }
 
-        .upcoming-appointments, .patient-requests {
+        .upcoming-appointments,
+        .patient-requests {
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -208,52 +226,62 @@ $stmt->close();
         }
     </style>
 </head>
+
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="doctor-profile">
                 <div class="doctor-avatar">👨‍⚕️</div>
-                <div class="doctor-name">Dr.  <?php echo htmlspecialchars($name); ?></div>
+                <div class="doctor-name">Dr. <?php echo htmlspecialchars($name); ?></div>
                 <div class="doctor-specialty"><?php echo htmlspecialchars($specialization); ?></div>
             </div>
             <ul class="sidebar-menu">
                 <li>Dashboard</li>
-                <li >Appointments</li>
+                <li>Appointments</li>
                 <li>Patient Records</li>
-                <li>Prescriptions</li>
+                <li onclick="window.location.href='prescription.php'">Prescriptions</li>
                 <li>Lab Results</li>
                 <li>Messages</li>
                 <li>Schedule Management</li>
-                <li>Profile Settings</li>
-                <li onclick="window.location.href='logout.php'">logout</li>
+                <li onclick="window.location.href='doctor_settings.php'">Profile Settings</li>
+                <li onclick="window.location.href='logout.php'">Logout</li>
             </ul>
         </div>
-        
+
         <div class="main-content">
             <div class="header">
                 <div>
-                    <h2>Welcome back,</h2><h1> Dr.<?php echo htmlspecialchars($name); ?>!</h1>
+                    <h2>Welcome back,</h2>
+                    <h1> Dr.<?php echo htmlspecialchars($name); ?>!</h1>
                     <p>Today's Schedule - Monday, Feb 6, 2025</p>
                 </div>
-                <button class="button">+ New Appointment</button>
+                <button class="button" onclick="window.location.href='doctorappointment.php'">+ New Appointment</button>
             </div>
 
             <div class="today-stats">
                 <div class="stat-card">
                     <h3>Today's Appointments</h3>
-                    <div class="stat-value">8</div>
+                    <div class="stat-value">
+                        <p id="appointments">0</p>
+                    </div>
                 </div>
                 <div class="stat-card">
                     <h3>Pending Reports</h3>
-                    <div class="stat-value">3</div>
+                    <div class="stat-value">
+                        <p id="pending_reports">0</p>
+                    </div>
                 </div>
                 <div class="stat-card">
                     <h3>New Messages</h3>
-                    <div class="stat-value">5</div>
+                    <div class="stat-value">
+                        <p id="new_messages">0</p>
+                    </div>
                 </div>
                 <div class="stat-card">
                     <h3>Total Patients</h3>
-                    <div class="stat-value">1,247</div>
+                    <div class="stat-value">
+                        <p id="total_patients">0</p>
+                    </div>
                 </div>
             </div>
 
@@ -306,5 +334,20 @@ $stmt->close();
             </div>
         </div>
     </div>
+
+
+    <script>
+        // Fetch dashboard data from the PHP API
+        fetch("http://localhost/livmedly/doctordashboard.php")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("appointments").textContent = data.appointments;
+                document.getElementById("pending_reports").textContent = data.pending_reports;
+                document.getElementById("new_messages").textContent = data.new_messages;
+                document.getElementById("total_patients").textContent = data.total_patients.toLocaleString();
+            })
+            .catch(error => console.error("Error fetching data:", error));
+    </script>
 </body>
+
 </html>

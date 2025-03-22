@@ -24,25 +24,39 @@ date_default_timezone_set("Asia/Kolkata"); // Standard Indian timezone
 $current_date = date("Y-m-d");
 $current_time = date("H:i:s");
 
-// Fetch appointments
+// Fetch user email from session or database
+if (!isset($_SESSION['email'])) {
+    $query = "SELECT email FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($email);
+    $stmt->fetch();
+    $_SESSION['email'] = $email;
+    $stmt->close();
+} else {
+    $email = $_SESSION['email'];
+}
+
+// Fetch all appointments linked to this email
 $sql = "SELECT id, name, email, phone, department, doctor, specialization, date, time, notes, status 
         FROM appointments 
-        WHERE user_id = ?
+        WHERE email = ?
         ORDER BY date DESC, time DESC";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
+$stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments</title>
+    
     <!-- ===============================================-->
     <!--Favicons-->
     <!-- ===============================================-->
@@ -55,13 +69,14 @@ $result = $stmt->get_result();
             font-family: 'Montserrat', sans-serif;
             background-color: #f0f2f5;
             padding: 20px;
+            text-align: center;
         }
 
         .appointment-container {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            justify-content: left;
+            justify-content: center;
         }
 
         .appointment-card {
@@ -70,6 +85,7 @@ $result = $stmt->get_result();
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 350px;
+            text-align: left;
         }
 
         .appointment-card h3 {
@@ -103,7 +119,7 @@ $result = $stmt->get_result();
             background: #f44336;
             color: white;
         }
-
+        
         .cancel-btn {
             background: #f44336;
             color: white;
@@ -112,16 +128,36 @@ $result = $stmt->get_result();
             cursor: pointer;
             border-radius: 5px;
         }
-
+        
         .cancel-btn:hover {
             background: #d32f2f;
         }
+
+        .home-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .home-btn:hover {
+            background-color: #45a049;
+        }
+
+        .home-btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
-
 <body>
 
-    <h2>My Appointments</h2>
+    <h2>My Appointments (Email: <?php echo htmlspecialchars($email); ?>)</h2>
     <div class="appointment-container">
         <?php
         if ($result->num_rows > 0) {
@@ -131,7 +167,7 @@ $result = $stmt->get_result();
                 $status = $row['status'];
 
                 // Automatically determine appointment status
-                if ($status !== "canceled") {
+                if ($status !== "canceled") { 
                     if ($appointment_date < $current_date || ($appointment_date == $current_date && $appointment_time < $current_time)) {
                         $status = "completed";
                     } else {
@@ -149,7 +185,7 @@ $result = $stmt->get_result();
                         <p class='status status-" . strtolower($status) . "'>" . ucfirst($status) . "</p>";
 
                 if ($status === "upcoming") {
-                    echo "<form method='POST' action='cancel_appointment.php'>
+                    echo "<form method='POST' action='cancel-appointment.php'>
                             <input type='hidden' name='appointment_id' value='" . $row['id'] . "'>
                             <button type='submit' class='cancel-btn'>Cancel</button>
                           </form>";
@@ -163,8 +199,12 @@ $result = $stmt->get_result();
         ?>
     </div>
 
-</body>
+    <!-- Home Button -->
+    <div class="home-btn-container">
+        <a href="userdashboard.php" class="home-btn">Home</a>
+    </div>
 
+</body>
 </html>
 
 <?php

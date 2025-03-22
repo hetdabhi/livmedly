@@ -36,12 +36,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = $result->fetch_assoc();
 
         if (password_verify($password, $row['password'])) {  // Secure password check
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['role'] = $role; // Store user role in session
-
             if ($role == "user") {
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['role'] = 'user'; // Store user role in session
                 header("Location: userdashboard.php"); // Redirect user to their dashboard
             } elseif ($role == "doctor") {
+                $_SESSION['doctor_id'] = $row['id'];
+                $_SESSION['role'] = 'doctor'; // Store doctor role in session
                 header("Location: doctordashboard.php"); // Redirect doctor to their dashboard
             }
             exit();

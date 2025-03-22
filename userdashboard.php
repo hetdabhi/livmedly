@@ -37,10 +37,13 @@ while ($row = $result->fetch_assoc()) {
 
 $stmt->close();
 
+// Initialize daysRemaining
+$daysRemaining = null; // Default value
+
 // Check if there are any upcoming appointments
 if (!empty($appointments)) {
     // Get the first upcoming appointment (assuming sorted by date)
-    $nextAppointment = $appointments[0];
+    $nextAppointment = $appointments[0]; 
 
     // Convert appointment date to a timestamp
     $appointmentDate = strtotime($nextAppointment['date']);
@@ -48,12 +51,8 @@ if (!empty($appointments)) {
 
     // Calculate days remaining
     $daysRemaining = ($appointmentDate - $currentDate) / (60 * 60 * 24);
-} else {
-    $daysRemaining = null; // No upcoming appointments
-}
+} 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -318,11 +317,11 @@ if (!empty($appointments)) {
                 <li onclick="window.location.href='userdashboard.php'">Dashboard</li>
                 <li onclick="window.location.href='display-appointment.php'">My Appointment</li>
                 <li>Medical Records</li>
-                <li>Prescriptions</li>
+                <li onclick="window.location.href='prescription_details.php'">Prescriptions</li>
                 <!-- <li>Messages</li> -->
                 <li onclick="window.location.href='chatbot/chatbot.html'">Chat Bot</li>
                 <li onclick="window.location.href='bmi/bmi.html'">BMI Calculator</li>
-                <li onclick="window.location.href='setting.html'">Settings</li>
+                <li onclick="window.location.href='user_settings.php'">Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
             </ul>
         </div>

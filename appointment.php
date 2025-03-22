@@ -17,51 +17,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $phone = $_POST['phone'];
     $department = $_POST['department'];
-    $doctor_id = $_POST['doctor_id'];  // Now use doctor_id
+    $doctor = $_POST['doctor'];
     $specialization = $_POST['specialization'];
     $date = $_POST['date'];
     $time = $_POST['time'];
     $notes = $_POST['notes'];
 
-    date_default_timezone_set("Asia/kolkata"); // Change this to your actual timezone
+date_default_timezone_set("Asia/kolkata"); // Change this to your actual timezone
 
-    // Convert appointment date & time to timestamp
-    $appointmentDateTime = strtotime($date . " " . $time);
-    $currentDateTime = time();
+// Convert appointment date & time to timestamp
+$appointmentDateTime = strtotime($date . " " . $time);
+$currentDateTime = time();
 
-    // Check if the appointment is in the past
-    if ($appointmentDateTime < $currentDateTime) {
-        echo "<script>alert('❌ Error: You cannot book an appointment in the past!');</script>";
-        echo "<script>window.location.href = 'appointment.php';</script>";
-        exit;
-    }
+// Check if the appointment is in the past
+if ($appointmentDateTime < $currentDateTime) {
+    echo "<script>alert('❌ Error: You cannot book an appointment in the past!');</script>";
+    echo "<script>window.location.href = 'appointment.php';</script>";
+    exit;
+}
 
-    // Check if doctor exists in doctors table
-    $doctor_check_sql = "SELECT id FROM doctors WHERE id = ?";
-    $doctor_check_stmt = $conn->prepare($doctor_check_sql);
-    $doctor_check_stmt->bind_param("i", $doctor_id);
-    $doctor_check_stmt->execute();
-    $doctor_check_stmt->store_result();
+// Prepare the SQL query with user_id
+$sql = "INSERT INTO appointments (user_id, name, email, phone, department, doctor, specialization, date, time, notes) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    if ($doctor_check_stmt->num_rows == 0) {
-        echo "<script>alert('❌ Error: Selected doctor does not exist!'); window.history.back();</script>";
-        exit;
-    }
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("isssssssss", $user_id, $name, $email, $phone, $department, $doctor, $specialization, $date, $time, $notes);
 
-    $doctor_check_stmt->close();
-
-    // Prepare the SQL query with user_id and doctor_id
-    $sql = "INSERT INTO appointments (user_id, name, email, phone, department, doctor_id, specialization, date, time, notes) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssssss", $user_id, $name, $email, $phone, $department, $doctor_id, $specialization, $date, $time, $notes);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('✅ Appointment booked successfully!'); window.location.href='userdashboard.php';</script>";
-    } else {
-        echo "<script>alert('❌ Error booking appointment: " . $stmt->error . "'); window.history.back();</script>";
-    }
+if ($stmt->execute()) {
+    echo "<script>alert('✅ Appointment booked successfully!'); window.location.href='userdashboard.php';</script>";
+} else {
+    echo "<script>alert('❌ Error booking appointment: " . $stmt->error . "'); window.history.back();</script>";
+}
 
     $stmt->close();
 }
@@ -76,13 +62,14 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>LivMedly | Book Appointment</title>
 
+    
     <!-- ===============================================-->
     <!--Favicons-->
     <!-- ===============================================-->
 
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
-    <title>LivMedly | Book Appointment</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
@@ -118,10 +105,10 @@ $conn->close();
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            width: 768px;
+            width: 780px;
             /* Reduced the width */
             max-width: 500%;
-            height: 400px;
+            height: 385px;
             /* Adjust the height as well */
             min-height: 600px;
             /* Set a minimum height */
@@ -375,7 +362,7 @@ $conn->close();
                     <option value="pediatrician">Pediatrician</option>
                     <option value="orthopedic">Orthopedic</option>
                 </select>
-
+                
                 <input type="date" name="date" required />
                 <select name="time" required>
                     <option value="" disabled selected>Select Time Slot</option>
@@ -388,7 +375,7 @@ $conn->close();
                 <textarea name="notes" placeholder="Additional Notes (Optional)"></textarea>
                 <button type="submit">Book Appointment</button>
             </form>
-
+            
         </div>
         <div class="info-panel">
             <h1>Important Information</h1>

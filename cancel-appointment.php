@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['appointment_id'])) {
     $stmt->bind_param("ii", $appointment_id, $user_id);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Appointment canceled successfully!'); window.location.href = 'appointment.php';</script>";
+        echo "<script>alert('Appointment canceled successfully!'); window.location.href = 'display-appointment.php';</script>";
     } else {
         echo "Error canceling appointment.";
     }
