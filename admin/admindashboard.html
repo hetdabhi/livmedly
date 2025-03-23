@@ -147,17 +147,30 @@
     <div class="sidebar">
         <h2>LivMedly</h2>
         <img src="admin.png" alt="Profile Image" class="profile-img">
-        <a href="admindashboard.html" class="active" onclick="showSection('dashboard')"><i class="fas fa-home"></i>
-            Dashboard</a>
-        <a href="doctor-registration.html" onclick="showSection('doctor-form')"><i class="fas fa-user-md"></i> Add
-            Doctor</a>
-        <a href="list-of-users.php" onclick="showSection('user-list')"><i class="fas fa-users"></i> Patient List</a>
-        <a href="view-appointments.php" onclick="showSection('appointment-list')"><i class="fas fa-calendar-check"></i>
-            Appointments</a>
+        <a href="admindashboard.html" class="active" onclick="showSection('dashboard')">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="doctor-registration.html" onclick="showSection('doctor-form')">
+            <i class="fas fa-user-md"></i> Add Doctor
+        </a>
+        <a href="list-of-users.php" onclick="showSection('user-list')">
+            <i class="fas fa-users"></i> Patient List
+        </a>
+        <a href="view-appointments.php" onclick="showSection('appointment-list')">
+            <i class="fas fa-calendar-check"></i> Appointments
+        </a>
+        <!-- <a href="forgot-password.php" class="forgot-password">
+            <i class="fas fa-key"></i> Forgot Password
+        </a> -->
+        <a href="revenue-payment.php">
+            <i class="fas fa-rupee-sign"></i> Revenue Payment
+        </a>
         <a href="#"><i class="fas fa-envelope"></i> Messages</a>
-        <a href="logout.php" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+       
+        <a href="logout.php" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
     </div>
-
 
     <div class="main-content" id="dashboard">
         <h1>Welcome, Admin</h1>
@@ -178,8 +191,41 @@
                 <h3>Manage Doctors</h3>
                 <a href="doctor-registration.html" onclick="showSection('doctor-form')">Add Doctor</a>
             </div>
+            <div class="card">
+                <h3>Prescriptions</h3>
+                <a href="list-of-prescription.php">View Help</a>
+            </div>
+            <div class="card">
+                <h3>Revenue</h3>
+                <a href="revenue-payment.php">View Help</a>
+            </div>
+            <div class="card">
+                <h3>Subscribers</h3>
+                <a href="list-of-subscribers.php">View Subscribers</a>
+            </div>
+            <div class="card">
+                <h3>Contacts</h3>
+                <a href="list-of-contacts.php">View Contacts</a>
+            </div>
+            <div class="card">
+                <h3>Help Requests</h3>
+                <a href="help-section.php">View Help</a>
+            </div>
+            <div class="card">
+                <h3>Forgot Password</h3>
+                <a href="forgot-password.php">View Help</a>
+            </div>
+            <div class="card">
+                <h3>Developers</h3>
+                <a href="developers/developer.html">View Help</a>
+            </div>
+            <div class="card">
+                <h3>ChatBot</h3>
+                <a href="chatbot/chatbot.html">View Help</a>
+            </div>
         </div>
     </div>
+
 
     <div class="main-content hidden" id="user-list">
         <h2>Users List</h2>

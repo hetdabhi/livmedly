@@ -19,6 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $blood_group = isset($_POST['blood_group']) ? $_POST['blood_group'] : 'Unknown';
     $specialization = isset($_POST['specialization']) ? $_POST['specialization'] : 'General';
     $address = trim($_POST['address']);
+    $password = trim($_POST['password']); // Capture the password from the form
+
+    // Hash the password for security
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Check if username already exists
     $check_sql = "SELECT username FROM doctor WHERE username = ?";
@@ -30,12 +34,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($check_stmt->num_rows > 0) {
         echo "<script>alert('Error: Username already exists! Please choose a different username.'); window.location.href='doctor-registration.html';</script>";
     } else {
-        // Insert new doctor record
-        $sql = "INSERT INTO doctor (name, username, email, phone_number, gender, blood_group, specialization, address) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Insert new doctor record, including the hashed password
+        $sql = "INSERT INTO doctor (name, username, email, phone_number, gender, blood_group, specialization, address, password) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssssss", $name, $username, $email, $phone_number, $gender, $blood_group, $specialization, $address);
+        $stmt->bind_param("sssssssss", $name, $username, $email, $phone_number, $gender, $blood_group, $specialization, $address, $hashed_password);
 
         if ($stmt->execute()) {
             echo "<script>alert('Doctor registered successfully!'); window.location.href='doctor-registration.html';</script>";

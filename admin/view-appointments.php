@@ -1,10 +1,19 @@
 <?php
 include 'config.php'; // Ensure this file connects to your database
 
+if (isset($_GET['delete_id'])) {
+    $delete_id = intval($_GET['delete_id']);
+    $stmt = $conn->prepare("DELETE FROM appointments WHERE id = ?");
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    $stmt->close();
+    header("Location: appointment-list.php"); // Redirect to refresh the page
+    exit();
+}
+
 $sql = "SELECT id, name, phone, department, doctor, date, time, status FROM appointments";
 $result = $conn->query($sql);
 
-// Check if the connection and query are successful
 if (!$result) {
     die("Error in SQL query: " . $conn->error);
 }
@@ -18,13 +27,8 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment List</title>
 
-    <!-- ===============================================-->
-    <!--Favicons-->
-    <!-- ===============================================-->
-
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
-
-    <!-- Google Fonts - Poppins -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -57,8 +61,7 @@ if (!$result) {
             border-collapse: collapse;
         }
 
-        th,
-        td {
+        th, td {
             padding: 12px;
             border: 1px solid #ddd;
             text-align: center;
@@ -77,6 +80,21 @@ if (!$result) {
 
         tr:hover {
             background: #e3f2fd;
+        }
+
+        .delete-button {
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .delete-button:hover {
+            background: #c82333;
         }
 
         .home-button {
@@ -112,6 +130,7 @@ if (!$result) {
                 <th>Appointment Date</th>
                 <th>Time</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
             <?php
             if ($result->num_rows > 0) {
@@ -125,10 +144,11 @@ if (!$result) {
                         <td>" . $row["date"] . "</td>
                         <td>" . $row["time"] . "</td>
                         <td>" . $row["status"] . "</td>
+                        <td><a href='?delete_id=" . $row["id"] . "' class='delete-button'>Delete</a></td>
                       </tr>";
                 }
             } else {
-                echo "<tr><td colspan='8'>No appointments found</td></tr>";
+                echo "<tr><td colspan='9'>No appointments found</td></tr>";
             }
             $conn->close();
             ?>

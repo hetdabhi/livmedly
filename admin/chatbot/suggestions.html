@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions List</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            /* Apply Montserrat font globally */
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+
+        /* Container for Centering and Styling */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* Sticky Suggestions Container */
+        .suggestions-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            font-size: 24px;
+        }
+
+        /* Sticky Header for Suggestions Text */
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            /* Use bold weight */
+            text-align: center;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        /* Suggestions List Styles */
+        .suggestions-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions-list li {
+            background-color: #ffffff;
+            color: #333;
+            padding: 18px 25px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Hover Effect for Suggestions */
+        .suggestions-list li:hover {
+            background-color: #007bff;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Active State for Suggestions */
+        .suggestions-list li:active {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .suggestions-list li {
+                font-size: 1rem;
+                padding: 15px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .suggestions-list li {
+                font-size: 0.95rem;
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="suggestions-container">
+            <h1>Suggestions</h1>
+            <!-- Suggestions List -->
+            <ul class="suggestions-list">
+                <li>Hi</li>
+                <li>Hello</li>
+                <li>How are you</li>
+                <li>Tell me a joke</li>
+                <li>Who created you</li>
+                <li>What can you do</li>
+                <li>How old are you</li>
+                <li>Where are you from</li>
+                <li>Can you help me</li>
+                <li>What's your name</li>
+                <li>Are you human</li>
+                <li>Can you call someone for me</li>
+                <li>What is AI</li>
+                <li>Tell me a fun fact</li>
+                <li>What languages do you speak</li>
+                <li>How do I contact customer support</li>
+                <li>Can you translate this for me</li>
+                <li>What is your purpose</li>
+                <li>Do you sleep</li>
+                <li>How do I track my order</li>
+                <li>What’s your favorite color</li>
+                <li>Can you tell me a story</li>
+                <li>How do I change my email</li>
+                <li>What should I do if I forget my username</li>
+                <li>Can I get a refund</li>
+                <li>Do you have feelings</li>
+                <li>How do I update my software</li>
+                <li>Can you sing a song</li>
+                <li>Who is the president</li>
+                <li>How do I turn on dark mode</li>
+                <li>What is the best phone</li>
+                <li>Can I schedule a meeting</li>
+                <li>What’s trending right now</li>
+                <li>Can you tell me a quote</li>
+                <li>How do I delete my account</li>
+                <li>Can you order food for me</li>
+                <li>How do I restart my device</li>
+                <li>What’s the time now</li>
+                <li>How do I install an app</li>
+                <li>What’s your favorite movie</li>
+                <li>Where is the nearest hospital</li>
+                <li>How do I reset my password</li>
+                <li>What's the date today</li>
+                <li>How do I check my balance</li>
+                <li>What is the capital of France</li>
+                <li>How can I improve my WiFi speed</li>
+                <li>Can you tell me a riddle</li>
+                <li>What should I eat today</li>
+                <li>How do I book a flight</li>
+                <li>How do I set up my email</li>
+                <li>What is the weather like today</li>
+                <li>Health Tips</li>
+                <li>Weight Loss Tips</li>
+                <li>Nutrition Information</li>
+                <li>Exercise Tips</li>
+                <li>Diet Advice</li>
+                <li>General Inquiry</li>
+                <li>Goodbye</li>
+                <li>How to Stay Healthy</li>
+                <li>How to Lose Weight</li>
+                <li>What is a Balanced Diet?</li>
+                <li>How to Improve My Health</li>
+                <li>How to Stay Motivated</li>
+                <li>What is the Best Exercise for Weight Loss?</li>
+                <li>How to Manage Stress</li>
+                <li>How to Build Muscle</li>
+                <li>How to Boost My Immune System</li>
+                <li>How to Reduce Sugar Intake</li>
+                <li>How to Sleep Better</li>
+                <li>What is Cardio?</li>
+                <li>How to Stay Positive</li>
+                <li>Can I Drink Coffee While Dieting?</li>
+                <li>How Much Water Should I Drink?</li>
+                <li>How to Manage Cravings</li>
+                <li>How to Deal with Anxiety</li>
+                <li>What is a Food Pyramid?</li>
+                <li>What is the Best Workout for Beginners?</li>
+                <li>How Do I Improve My Diet?</li>
+                <li>How to Reduce Bloating</li>
+                <li>How to Get Toned</li>
+                <li>What are Superfoods?</li>
+                <li>How to Stay Consistent with My Diet</li>
+                <li>What is Intermittent Fasting?</li>
+                <li>How to Stay Motivated to Work Out</li>
+                <li>How to Improve Digestion</li>
+                <li>Can You Recommend a Workout?</li>
+                <li>What is the Best Diet Plan?</li>
+                <li>How Do I Track My Progress?</li>
+                <li>What is the Keto Diet?</li>
+                <li>How to Build Muscle</li>
+                <li>How to Improve Mental Health</li>
+                <li>How to Stop Procrastinating</li>
+                <li>How to Prevent Injuries While Exercising</li>
+                <li>What is Portion Control?</li>
+                <li>What is the Best Weight Loss Program?</li>
+                <li>How to Get Better Sleep</li>
+                <li>What is the Best Time to Exercise?</li>
+                <li>How to Reduce Stress</li>
+                <li>How to Eat Healthy on a Budget</li>
+                <li>How to Manage My Weight Loss Journey</li>
+                <li>How Much Protein Do I Need?</li>
+                <li>What is a Healthy Snack?</li>
+                <li>How to Track Calories</li>
+                <li>How to Stay Motivated to Eat Healthy</li>
+                <li>What are the Symptoms of Dehydration?</li>
+                <li>Can You Help with Stress Management?</li>
+                <li>How Do I Lose Belly Fat?</li>
+                <li>What is a Smoothie Bowl?</li>
+                <li>Can You Recommend a Diet Plan?</li>
+                <li>How to Stay Active Throughout the Day</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

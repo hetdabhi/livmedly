@@ -32,14 +32,9 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription Details</title>
 
-    
-    <!-- ===============================================-->
-    <!--Favicons-->
-    <!-- ===============================================-->
-
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
-    
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+
     <style>
         * {
             box-sizing: border-box;
@@ -79,16 +74,24 @@ $conn->close();
             font-size: 18px;
         }
 
+        .table-container {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            table-layout: fixed;
         }
 
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
         }
 
         th {
@@ -123,6 +126,58 @@ $conn->close();
             border-radius: 8px;
             margin: 20px 0;
         }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .home-btn {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .home-btn-container {
+                margin-top: 20px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            .home-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 
@@ -130,48 +185,51 @@ $conn->close();
     <div class="container">
         <h1>Prescription Details</h1>
         <p class="welcome-text">Welcome, <?php echo htmlspecialchars($user_name); ?>!</p>
-        <?php if ($result->num_rows > 0): ?>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Medicine</th>
-                        <th>Quantity</th>
-                        <th>Morning</th>
-                        <th>Afternoon</th>
-                        <th>Evening</th>
-                        <th>Night</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+
+        <div class="table-container">
+            <?php if ($result->num_rows > 0): ?>
+                <table>
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['medicine_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['quantity']); ?></td>
-                            <td><?php echo $row['morning'] ? '✔' : '✖'; ?></td>
-                            <td><?php echo $row['afternoon'] ? '✔' : '✖'; ?></td>
-                            <td><?php echo $row['evening'] ? '✔' : '✖'; ?></td>
-                            <td><?php echo $row['night'] ? '✔' : '✖'; ?></td>
-                            <td><?php echo htmlspecialchars($row['notes']); ?></td>
+                            <th>Doctor</th>
+                            <th>Medicine</th>
+                            <th>Quantity</th>
+                            <th>Morning</th>
+                            <th>Afternoon</th>
+                            <th>Evening</th>
+                            <th>Night</th>
+                            <th>Notes</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <div class="no-prescriptions">
-                <p>No prescriptions found. Please consult with a doctor to get prescriptions.</p>
-            </div>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['doctor_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['medicine_name']); ?></td>
+                                <td><?php echo htmlspecialchars($row['quantity']); ?></td>
+                                <td><?php echo $row['morning'] ? '✔' : '✖'; ?></td>
+                                <td><?php echo $row['afternoon'] ? '✔' : '✖'; ?></td>
+                                <td><?php echo $row['evening'] ? '✔' : '✖'; ?></td>
+                                <td><?php echo $row['night'] ? '✔' : '✖'; ?></td>
+                                <td><?php echo nl2br(htmlspecialchars($row['notes'])); ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="no-prescriptions">
+                    <p>No prescriptions found. Please consult with a doctor to get prescriptions.</p>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 
-    <!-- Home Button Below the Container - Always go to user dashboard for patient view -->
+    <!-- Home Button -->
     <div class="home-btn-container">
         <a href="userdashboard.php" class="home-btn">Back to Dashboard</a>
     </div>
 
-    <!-- Session management script -->
+    <!-- Session Management Script -->
     <script>
     function keepSessionAlive() {
         fetch('keep_session.php')

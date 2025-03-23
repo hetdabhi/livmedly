@@ -117,6 +117,18 @@
         button:hover {
             background: #1e7bb0;
         }
+        .left-panel {
+    display: flex;
+    flex-direction: column;  /* Ensures elements stack vertically */
+    align-items: center; /* Centers content */
+    justify-content: center; /* Centers content vertically */
+    text-align: center;
+}
+
+.button-container {
+    margin-top: 15px; /* Adds spacing between text and button */
+}
+
     </style>
 </head>
 
@@ -124,6 +136,9 @@
     <div class="container">
         <div class="left-panel">
             <h2>Admin Panel <br> Register a Doctor</h2>
+            <div class="button-container">
+                <button onclick="location.href='admindashboard.html'" class="btn-nav">Dashboard</button>
+            </div>
         </div>
         <div class="right-panel">
             <h1>Doctor Registration</h1>
@@ -150,21 +165,19 @@
                 <input type="text" name="address" placeholder="Address" required>
                 <div class="password-container">
                     <input type="password" name="password" id="passwordField" placeholder="Password" required>
-                    <span class="password-toggle" onclick="togglePassword('passwordField', 'eyeIcon1')"
-                        id="eyeIcon1">👁️</span>
+                    <span class="password-toggle" onclick="togglePassword('passwordField', 'eyeIcon1')" id="eyeIcon1">👁️</span>
                 </div>
                 <div class="password-container">
-                    <input type="password" name="confirm_password" id="confirmPasswordField"
-                        placeholder="Confirm Password" required>
-                    <span class="password-toggle" onclick="togglePassword('confirmPasswordField', 'eyeIcon2')"
-                        id="eyeIcon2">👁️</span>
+                    <input type="password" name="confirm_password" id="confirmPasswordField" placeholder="Confirm Password" required>
+                    <span class="password-toggle" onclick="togglePassword('confirmPasswordField', 'eyeIcon2')" id="eyeIcon2">👁️</span>
                 </div>
                 <textarea name="qualifications" placeholder="Qualifications" required></textarea>
                 <button type="submit">Register Doctor</button>
             </form>
         </div>
     </div>
-
+    
+    
     <script>
         function togglePassword(fieldId, iconId) {
             var passwordField = document.getElementById(fieldId);
