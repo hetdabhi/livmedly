@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $night = isset($_POST['night'][$index]) ? 1 : 0;
 
         $stmt->bind_param("iisiiiiis", $doctor_id, $patient_id, $medicine_name, $quantity, $morning, $afternoon, $evening, $night, $notes);
-        
+
         if (!$stmt->execute()) {
             die("<script>alert('Error: Failed to insert prescription. " . mysqli_error($conn) . "'); window.history.back();</script>");
         }
@@ -76,14 +76,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription Form</title>
 
-    
+
     <!-- ===============================================-->
     <!--Favicons-->
     <!-- ===============================================-->
 
     <link rel="icon" type="image/png" href="favicon.ico" sizes="16x16">
 
-    
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
     <style>
         * {
@@ -116,7 +116,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: black;
         }
 
-        input, textarea {
+        input,
+        textarea {
             background-color: #f8f9fa;
             border: 1px solid #ced4da;
             padding: 12px;
@@ -132,7 +133,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-top: 10px;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
@@ -254,4 +256,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </body>
+
 </html>
+<script>
+    function addMedicineRow() {
+        let table = document.getElementById("medicineTable").getElementsByTagName('tbody')[0];
+        let rowCount = table.rows.length;
+        let row = table.insertRow(rowCount);
+
+        row.innerHTML = `
+            <td><input type="text" name="medicine_name[]" required></td>
+            <td><input type="number" name="quantity[]" required></td>
+            <td><input type="checkbox" name="morning[${rowCount}]" value="1"></td>
+            <td><input type="checkbox" name="afternoon[${rowCount}]" value="1"></td>
+            <td><input type="checkbox" name="evening[${rowCount}]" value="1"></td>
+            <td><input type="checkbox" name="night[${rowCount}]" value="1"></td>
+            <td><button type="button" class="remove-medicine-btn" onclick="removeRow(this)">✖</button></td>
+        `;
+    }
+
+    function removeRow(button) {
+        let row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
