@@ -168,9 +168,9 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Gender</th>
-                <th>Blood Group</th>
+                <th>BG</th>
                 <th>Address</th>
-                <th>Specialization</th>
+                <th>Spec</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>

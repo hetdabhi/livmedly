@@ -7,7 +7,7 @@ if (isset($_GET['delete_id'])) {
     $stmt->bind_param("i", $delete_id);
     $stmt->execute();
     $stmt->close();
-    header("Location: appointment-list.php"); // Redirect to refresh the page
+    header("Location: view-appointments.php"); // Redirect to refresh the page
     exit();
 }
 
