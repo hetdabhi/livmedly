@@ -11,9 +11,10 @@ if (!isset($_SESSION['doctor_id']) || empty($_SESSION['doctor_id'])) {
 $doctor_id = $_SESSION['doctor_id'];
 $name = "Unknown";
 $specialization = "Not Set";
+$profile_image = "img/default-profile.jpg"; // Default profile image
 
 // Fetch doctor details from database
-$stmt = $conn->prepare("SELECT name, specialization FROM doctor WHERE id = ?");
+$stmt = $conn->prepare("SELECT name, specialization, profile_image FROM doctor WHERE id = ?");
 $stmt->bind_param("i", $doctor_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -21,11 +22,16 @@ $result = $stmt->get_result();
 if ($row = $result->fetch_assoc()) {
     $name = $row['name'];
     $specialization = $row['specialization'];
+    if (!empty($row['profile_image'])) {
+        $profile_image = $row['profile_image']; // Use stored image if available
+    }
 } else {
     die("<script>alert('Doctor details not found.'); window.history.back();</script>");
 }
+
 $stmt->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -98,7 +104,6 @@ $stmt->close();
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
             cursor: pointer;
             transition: 0.3s ease-in-out;
         }
@@ -262,6 +267,7 @@ $stmt->close();
         .button:hover {
             transform: scale(1.05);
         }
+
         .sidebar h2 {
             text-align: center;
             margin-bottom: 20px;
@@ -279,26 +285,67 @@ $stmt->close();
             /* Centers the image */
         }
 
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #profilePic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .doctor-info {
+            margin-top: 10px;
+        }
+
+        .doctor-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .doctor-specialty {
+            font-size: 14px;
+            color: #d1d1d1;
+        }
     </style>
 </head>
 
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
-        <h2>LivMedly</h2>
-        <img src="img/doctor.png" alt="Profile Image" class="profile-img">
-            <div class="doctor-profile">
-                <!-- <div class="doctor-avatar">👨‍⚕️</div> -->
-                <div class="doctor-name">Dr. <?php echo htmlspecialchars($name); ?></div>
-                <div class="doctor-specialty"><?php echo htmlspecialchars($specialization); ?></div>
+            <h2>LivMedly</h2>
+            <div class="profile-section">
+                <div class="profile-image">
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
+                    <div class="image-container" onclick="document.getElementById('imageUpload').click()">
+                        <img src="img/doctor.png" id="profilePic" alt="Doctor Profile">
+                    </div>
+                </div>
+
+                <div class="doctor-info">
+                    <div class="doctor-name">Dr. <?php echo htmlspecialchars($name); ?></div>
+                    <div class="doctor-specialty"><?php echo htmlspecialchars($specialization); ?></div>
+                </div>
             </div>
+
             <ul class="sidebar-menu">
                 <li>Dashboard</li>
                 <li>Appointments</li>
                 <li>Patient Records</li>
                 <li onclick="window.location.href='prescription.php'">Prescriptions</li>
                 <!-- <li>Lab Results</li> -->
-                <li>Messages</li>
+                <li onclick="window.location.href='messages/messages.php'">Messages</li>
                 <!-- <li>Schedule Management</li> -->
                 <li onclick="window.location.href='doctor-settings.php'">Profile Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
@@ -392,6 +439,83 @@ $stmt->close();
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get Doctor ID from PHP session
+            const doctorId = "<?php echo isset($_SESSION['doctor_id']) ? $_SESSION['doctor_id'] : ''; ?>";
+
+            if (!doctorId) {
+                console.error("Doctor session not found!");
+                return;
+            }
+
+            const profilePicElement = document.getElementById("profilePic");
+            if (!profilePicElement) {
+                console.error("Profile picture element not found!");
+                return;
+            }
+
+            // Try to get saved profile image from localStorage
+            const savedImage = localStorage.getItem("doctorProfileImage_" + doctorId);
+            if (savedImage) {
+                profilePicElement.src = savedImage;
+            } else {
+                // If no saved image in localStorage, fallback to the database image
+                fetch("fetch_doctor_image.php?doctor_id=" + doctorId)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.profile_image) {
+                            profilePicElement.src = data.profile_image;
+                        } else {
+                            profilePicElement.src = "img/doctor.png"; // Default doctor profile image
+                        }
+                    })
+                    .catch(error => console.error("Error fetching profile image:", error));
+            }
+        });
+
+        function previewImage(event) {
+            const doctorId = "<?php echo isset($_SESSION['doctor_id']) ? $_SESSION['doctor_id'] : ''; ?>";
+
+            if (!doctorId) {
+                console.error("Doctor session not found!");
+                return;
+            }
+
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageSrc = e.target.result;
+                    document.getElementById("profilePic").src = imageSrc;
+                    localStorage.setItem("doctorProfileImage_" + doctorId, imageSrc); // Save per doctor
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeProfileImage() {
+            const doctorId = "<?php echo isset($_SESSION['doctor_id']) ? $_SESSION['doctor_id'] : ''; ?>";
+
+            if (!doctorId) {
+                console.error("Doctor session not found!");
+                return;
+            }
+
+            document.getElementById("profilePic").src = "img/doctor-default.png"; // Reset to default doctor image
+            localStorage.removeItem("doctorProfileImage_" + doctorId); // Remove only for this doctor
+        }
+
+        function logout() {
+            const doctorId = "<?php echo isset($_SESSION['doctor_id']) ? $_SESSION['doctor_id'] : ''; ?>";
+
+            if (doctorId) {
+                localStorage.removeItem("doctorProfileImage_" + doctorId); // Clear only current doctor's image on logout
+            }
+
+            window.location.href = "logout.php"; // Redirect to logout page
+        }
+    </script>
 
     <script>
         // Fetch dashboard data from the PHP API

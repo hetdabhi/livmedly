@@ -36,7 +36,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Users</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -46,6 +46,7 @@ $result = $conn->query($sql);
             padding: 20px;
             text-align: center;
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
@@ -56,34 +57,44 @@ $result = $conn->query($sql);
             border-radius: 10px;
             overflow-x: auto;
         }
+
         h2 {
             color: #000;
             font-size: 28px;
             font-weight: 600;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             min-width: 800px;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: center;
             font-size: 14px;
         }
+
         th {
             background: #004E92;
             color: white;
             font-weight: 600;
         }
+
         tr:nth-child(even) {
             background: #f9f9f9;
         }
+
         tr:hover {
             background: #e3f2fd;
         }
-        .delete-button, .recover-button, .permanent-delete-button {
+
+        .delete-button,
+        .recover-button,
+        .permanent-delete-button {
             padding: 6px 12px;
             border: none;
             border-radius: 4px;
@@ -92,12 +103,31 @@ $result = $conn->query($sql);
             text-decoration: none;
             color: white;
         }
-        .delete-button { background: #dc3545; }
-        .delete-button:hover { background: #c82333; }
-        .recover-button { background: #28a745; }
-        .recover-button:hover { background: #218838; }
-        .permanent-delete-button { background: #000; }
-        .permanent-delete-button:hover { background: #333; }
+
+        .delete-button {
+            background: #dc3545;
+        }
+
+        .delete-button:hover {
+            background: #c82333;
+        }
+
+        .recover-button {
+            background: #28a745;
+        }
+
+        .recover-button:hover {
+            background: #218838;
+        }
+
+        .permanent-delete-button {
+            background: #000;
+        }
+
+        .permanent-delete-button:hover {
+            background: #333;
+        }
+
         .home-button {
             display: inline-block;
             margin-top: 20px;
@@ -110,7 +140,11 @@ $result = $conn->query($sql);
             border-radius: 5px;
             transition: 0.3s;
         }
-        .home-button:hover { background: #218838; }
+
+        .home-button:hover {
+            background: #218838;
+        }
+        
     </style>
 </head>
 
@@ -148,9 +182,9 @@ $result = $conn->query($sql);
                             <td>" . ($row["status"] == 1 ? 'Active' : 'Inactive') . "</td>
                             <td>";
                     if ($row["status"] == 1) {
-                        echo "<a href='?delete_id=" . $row["id"] . "' class='delete-button'>Deactivate</a>";
+                        echo "<a href='?delete_id=" . $row["id"] . "' class='delete-button' style='margin-right: 10px;'>Off</a>";
                     } else {
-                        echo "<a href='?recover_id=" . $row["id"] . "' class='recover-button'>Activate</a> ";
+                        echo "<a href='?recover_id=" . $row["id"] . "' class='recover-button' style='margin-right: 10px;'>Activate</a>";
                         echo "<a href='?permanent_delete_id=" . $row["id"] . "' class='permanent-delete-button'>Delete</a>";
                     }
                     echo "</td></tr>";
@@ -165,4 +199,5 @@ $result = $conn->query($sql);
     </div>
 
 </body>
+
 </html>

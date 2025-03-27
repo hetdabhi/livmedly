@@ -1,5 +1,7 @@
 <?php
 session_start();
+// Include database connection (if needed)
+include 'config.php';
 include 'config.php';
 
 // Check if user is logged in
@@ -23,6 +25,7 @@ $_SESSION['fullname'] = $fullname;
 $_SESSION['email'] = $email;
 $_SESSION['phone'] = $phone;
 $_SESSION['bloodgroup'] = $bloodgroup;
+$_SESSION['profile_image'] = !empty($profile_image) ? $profile_image : 'img/user.png'; // Default image
 
 // Fetch user's appointment details
 $stmt = $conn->prepare("SELECT doctor, specialization, department, date, time, status FROM appointments WHERE email = ? AND date >= CURDATE() ORDER BY date ASC");
@@ -43,7 +46,7 @@ $daysRemaining = null; // Default value
 // Check if there are any upcoming appointments
 if (!empty($appointments)) {
     // Get the first upcoming appointment (assuming sorted by date)
-    $nextAppointment = $appointments[0]; 
+    $nextAppointment = $appointments[0];
 
     // Convert appointment date to a timestamp
     $appointmentDate = strtotime($nextAppointment['date']);
@@ -51,7 +54,7 @@ if (!empty($appointments)) {
 
     // Calculate days remaining
     $daysRemaining = ($appointmentDate - $currentDate) / (60 * 60 * 24);
-} 
+}
 ?>
 
 <!DOCTYPE html>
@@ -156,16 +159,54 @@ if (!empty($appointments)) {
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
+            /* Left 2/3, Right 1/3 */
+            gap: 20px;
+            align-items: start;
+            max-width: 100%;
+            /* Ensure full width */
+            margin: auto;
+            padding: 20px;
+        }
+
+
+        /* Main section (Left Side) */
+        .main-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Side Section (Right Side) */
+        .side-section {
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
         .card {
             background: white;
             padding: 20px;
+            /* Match padding with .header */
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* Match border-radius */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0. 1);
+            /* Match shadow */
             margin-bottom: 20px;
+            width: 100%;
+            /* Ensure full width */
+            display: flex;
+            flex-direction: column;
         }
+
+
+        /* Health Metrics Layout */
+        .health-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+
 
         .appointment-item,
         .prescription-item {
@@ -216,21 +257,27 @@ if (!empty($appointments)) {
             color: #283779;
             margin: 5px 0;
         }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
+            <h2>LivMedly</h2>
             <div class="profile-section">
 
                 <div class="profile-image">
                     <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
-                    <div class="image-container">
-                        <img src="" id="profilePic" alt="User Profile" width="80" height="80" onclick="document.getElementById('imageUpload').click()">
-                        <span id="removeIcon" onclick="removeProfileImage()">🗑️</span>
+                    <div class="image-container" onclick="document.getElementById('imageUpload').click()">
+                        <img src="default-profile.jpg" id="profilePic" alt="User Profile" width="80" height="80">
                     </div>
                 </div>
+
 
                 <style>
                     .profile-image {
@@ -250,7 +297,6 @@ if (!empty($appointments)) {
                         height: 80px;
                         border-radius: 50%;
                         object-fit: cover;
-                        border: 2px solid #007bff;
                         transition: opacity 0.3s;
                     }
 
@@ -278,12 +324,47 @@ if (!empty($appointments)) {
                     #removeIcon:hover {
                         background: darkred;
                     }
+
+                    button[name="update_metrics"] {
+                        background-color: #1e3a8a;
+                        /* Dark blue */
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        font-weight: bold;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: background 0.3s ease-in-out;
+                    }
+
+                    button[name="update_metrics"]:hover {
+                        background-color: #1a237e;
+                        /* Slightly darker blue */
+                    }
+
+                    .health-metrics input[type="text"] {
+                        width: 100%;
+                        padding: 8px;
+                        font-size: 16px;
+                        border: 2px solid #ccc;
+                        border-radius: 6px;
+                        outline: none;
+                        transition: border-color 0.3s ease-in-out;
+                    }
+
+                    .health-metrics input[type="text"]:focus {
+                        border-color: #1e3a8a;
+                        /* Blue border on focus */
+                        box-shadow: 0 0 5px rgba(30, 58, 138, 0.5);
+                    }
                 </style>
 
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
-                        // Load saved image from localStorage
-                        const savedImage = localStorage.getItem("profileImage");
+                        const userId = "<?php echo $_SESSION['user_id']; ?>"; // Get user ID from PHP session
+                        const savedImage = localStorage.getItem("profileImage_" + userId); // Fetch user-specific image
+
                         if (savedImage) {
                             document.getElementById("profilePic").src = savedImage;
                         } else {
@@ -292,23 +373,33 @@ if (!empty($appointments)) {
                     });
 
                     function previewImage(event) {
+                        const userId = "<?php echo $_SESSION['user_id']; ?>"; // Get user ID from PHP session
                         const file = event.target.files[0];
+
                         if (file) {
                             const reader = new FileReader();
                             reader.onload = function(e) {
                                 const imageSrc = e.target.result;
                                 document.getElementById("profilePic").src = imageSrc;
-                                localStorage.setItem("profileImage", imageSrc); // Save image in localStorage
+                                localStorage.setItem("profileImage_" + userId, imageSrc); // Save per user
                             };
                             reader.readAsDataURL(file);
                         }
                     }
 
                     function removeProfileImage() {
+                        const userId = "<?php echo $_SESSION['user_id']; ?>"; // Get user ID from PHP session
                         document.getElementById("profilePic").src = "img/user.png"; // Reset to default image
-                        localStorage.removeItem("profileImage"); // Remove from localStorage
+                        localStorage.removeItem("profileImage_" + userId); // Remove only for this user
+                    }
+
+                    function logout() {
+                        const userId = "<?php echo $_SESSION['user_id']; ?>"; // Get user ID
+                        localStorage.removeItem("profileImage_" + userId); // Clear only current user's image on logout
+                        window.location.href = "logout.php"; // Redirect to logout page
                     }
                 </script>
+
 
                 <h3><?php echo $_SESSION['fullname'] ?></h3>
                 <p>Patient_id: <?php echo $_SESSION['user_id']; ?></p>
@@ -336,11 +427,13 @@ if (!empty($appointments)) {
 
                     <?php
                     if ($daysRemaining !== null) {
-                        if ($daysRemaining > 1) {
-                            echo "Your next appointment is in <strong>" . $daysRemaining . " days</strong>.";
-                        } elseif ($daysRemaining == 1) {
+                        $roundedDays = round($daysRemaining, 1); // Rounds to one decimal place
+
+                        if ($roundedDays > 1) {
+                            echo "Your next appointment is in <strong>" . $roundedDays . " days</strong>.";
+                        } elseif ($roundedDays == 1) {
                             echo "Your appointment is <strong>tomorrow</strong>.";
-                        } elseif ($daysRemaining == 0) {
+                        } elseif ($roundedDays == 0) {
                             echo "Your appointment is <strong>today</strong>!";
                         } else {
                             echo "Your appointment date has passed.";
@@ -349,6 +442,7 @@ if (!empty($appointments)) {
                         echo "You have no upcoming appointments.";
                     }
                     ?>
+
                     </>
                 </div>
                 <div class="quick-actions">
@@ -378,63 +472,98 @@ if (!empty($appointments)) {
                                 <span class="status-badge status-upcoming"><?php echo ucfirst($row['status']); ?></span>
                             </div>
                         <?php } ?>
-                        <!-- <div class="appointment-item">
-                            <div>
-                                <h4>Dr. Mike Wilson - General Check-up</h4>
-                                <p>February 15, 2025 - 2:00 PM</p>
-                            </div>
-                            <span class="status-badge status-upcoming">Scheduled</span>
-                        </div> -->
                     </div>
-
                     <div class="card">
                         <h2>Current Prescriptions</h2>
-                        <div class="prescription-item">
-                            <div>
-                                <h4>Amoxicillin 500mg</h4>
-                                <p>Take 3 times daily with meals</p>
-                            </div>
-                            <span class="status-badge status-active">Active</span>
-                        </div>
-                        <div class="prescription-item">
-                            <div>
-                                <h4>Vitamin D3</h4>
-                                <p>Take once daily</p>
-                            </div>
-                            <span class="status-badge status-active">Active</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="side-section">
-                    <div class="card">
-                        <h2>Health Metrics</h2>
-                        <div class="health-metrics">
-                            <div class="metric-card">
-                                <h4>Blood Pressure</h4>
-                                <div class="metric-value">120/80</div>
-                                <p>Last checked: Today</p>
-                            </div>
-                            <div class="metric-card">
-                                <h4>Heart Rate</h4>
-                                <div class="metric-value">72 bpm</div>
-                                <p>Last checked: Today</p>
-                            </div>
-                            <div class="metric-card">
-                                <h4>Weight</h4>
-                                <div class="metric-value">68 kg</div>
-                                <p>Last checked: Yesterday</p>
-                            </div>
-                            <div class="metric-card">
-                                <h4>Blood Group</h4>
-                                <div class="metric-value">
-                                    <?php echo isset($_SESSION['bloodgroup']) ? $_SESSION['bloodgroup'] : 'N/A'; ?>
+                        <?php
+                        include 'config.php';
+                        // Start session only if it's not already started
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+
+                        // Include database connection (if needed)
+                        include 'config.php';
+
+                        // Ensure user is logged in
+                        if (!isset($_SESSION['user_id'])) {
+                            die("<script>alert('Please log in first.'); window.location.href='login.php';</script>");
+                        }
+
+                        $user_id = $_SESSION['user_id'];
+
+                        // Fetch prescriptions from the database
+                        $stmt = $conn->prepare("SELECT p.medicine_name, p.quantity, p.morning, p.afternoon, p.evening, p.night, p.notes, d.name AS doctor_name 
+                            FROM prescriptions p 
+                            JOIN doctor d ON p.doctor_id = d.id 
+                            WHERE p.user_id = ?");
+                        $stmt->bind_param("i", $user_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Determine dosage times
+                                $dosage = [];
+                                if ($row['morning']) $dosage[] = "Morning";
+                                if ($row['afternoon']) $dosage[] = "Afternoon";
+                                if ($row['evening']) $dosage[] = "Evening";
+                                if ($row['night']) $dosage[] = "Night";
+
+                                $dosage_text = !empty($dosage) ? implode(", ", $dosage) : "As prescribed";
+                        ?>
+                                <div class="prescription-item">
+                                    <div>
+                                        <h4><?php echo htmlspecialchars($row['medicine_name']); ?> (<?php echo $row['quantity']; ?>)</h4>
+                                        <p>Take: <?php echo $dosage_text; ?></p>
+                                        <p>Prescribed by: Dr. <?php echo htmlspecialchars($row['doctor_name']); ?></p>
+                                        <?php if (!empty($row['notes'])) { ?>
+                                            <p><strong>Notes:</strong> <?php echo htmlspecialchars($row['notes']); ?></p>
+                                        <?php } ?>
+                                    </div>
+                                    <span class="status-badge status-active">Active</span>
                                 </div>
-                                <p>Last checked: Today</p>
-                            </div>
+                        <?php
+                            }
+                        } else {
+                            echo "<p>No active prescriptions found.</p>";
+                        }
+
+                        $stmt->close();
+                        $conn->close();
+                        ?>
+                    </div>
+                    <div class="side-section">
+                        <div class="card">
+                            <h2>Health Metrics</h2>
+                            <form method="POST" action="update-metrics.php">
+                                <div class="health-metrics">
+                                    <div class="metric-card">
+                                        <h4>Blood Pressure</h4>
+                                        <input type="text" name="blood_pressure" value="<?php echo isset($_SESSION['bloodpressure']) ? $_SESSION['bloodpressure'] : ''; ?>" required>
+                                        <p>Last checked: Today</p>
+                                    </div>
+                                    <div class="metric-card">
+                                        <h4>Heart Rate</h4>
+                                        <input type="text" name="heart_rate" value="<?php echo isset($_SESSION['heartrate']) ? $_SESSION['heartrate'] : ''; ?>" required>
+                                        <p>Last checked: Today</p>
+                                    </div>
+                                    <div class="metric-card">
+                                        <h4>Blood Group</h4>
+                                        <input type="text" name="blood_group" value="<?php echo isset($_SESSION['bloodgroup']) ? $_SESSION['bloodgroup'] : ''; ?>" required>
+                                        <p>Last checked: Today</p>
+                                    </div>
+                                    <div class="metric-card">
+                                        <h4>Weight</h4>
+                                        <input type="text" name="weight" value="<?php echo isset($_SESSION['weight']) ? $_SESSION['weight'] : ''; ?>" required>
+                                        <p>Last checked: Yesterday</p>
+                                    </div>
+                                </div><br>
+                                <center><button type="submit" name="update_metrics">Update Metrics</button> </center>
+                            </form>
                         </div>
                     </div>
-
                     <div class="card">
                         <h2>Recent Messages</h2>
                         <div class="appointment-item">
