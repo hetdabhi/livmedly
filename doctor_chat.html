@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; }
+        .chat-container { width: 400px; background: white; padding: 20px; box-shadow: 0px 0px 10px gray; border-radius: 10px; }
+        .chat-header { text-align: center; font-weight: bold; padding-bottom: 10px; }
+        .chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .message { padding: 5px; border-radius: 5px; margin-bottom: 5px; }
+        .sent { background: #dcf8c6; text-align: right; }
+        .received { background: #fff; }
+        textarea { width: calc(100% - 20px); height: 50px; margin-bottom: 10px; }
+        button { width: 100%; padding: 10px; background: green; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chat with User</div>
+        <div class="chat-box" id="chat-box"></div>
+        <textarea id="message-input" placeholder="Type a message..."></textarea>
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatBox = document.getElementById("chat-box");
+            const messageInput = document.getElementById("message-input");
+            const sendButton = document.getElementById("send-button");
+
+            const senderId = 2; // Doctor ID
+            const receiverId = 1; // User ID
+
+            function fetchMessages() {
+                fetch(`message.php?sender_id=${senderId}&receiver_id=${receiverId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        chatBox.innerHTML = "";
+                        data.forEach(msg => {
+                            const msgElement = document.createElement("div");
+                            msgElement.classList.add("message", msg.sender_id == senderId ? "sent" : "received");
+                            msgElement.textContent = msg.sender_id == senderId ? `You: ${msg.message}` : `${msg.sender_name}: ${msg.message}`;
+                            chatBox.appendChild(msgElement);
+                        });
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    });
+            }
+
+            sendButton.addEventListener("click", function () {
+                const message = messageInput.value.trim();
+                if (message === "") return;
+
+                fetch("message.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: `sender_id=${senderId}&receiver_id=${receiverId}&message=${encodeURIComponent(message)}`
+                }).then(() => {
+                    messageInput.value = "";
+                    fetchMessages();
+                });
+            });
+
+            setInterval(fetchMessages, 2000);
+            fetchMessages();
+        });
+    </script>
+</body>
+</html>

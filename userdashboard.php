@@ -409,7 +409,7 @@ if (!empty($appointments)) {
                 <li onclick="window.location.href='display-appointment.php'">My Appointment</li>
                 <li>Medical Records</li>
                 <li onclick="window.location.href='prescription_details.php'">Prescriptions</li>
-                <!-- <li>Messages</li> -->
+                <li onclick="window.location.href='user_chat.html'">Messages</li>
                 <li onclick="window.location.href='chatbot/chatbot.html'">Chat Bot</li>
                 <li onclick="window.location.href='bmi/bmi.html'">BMI Calculator</li>
                 <li onclick="window.location.href='user-settings.php'">Settings</li>

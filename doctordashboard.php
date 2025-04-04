@@ -4,7 +4,7 @@ include 'config.php';
 
 // Check if doctor is logged in
 if (!isset($_SESSION['doctor_id']) || empty($_SESSION['doctor_id'])) {
-    die("<script>alert('Error: Doctor session lost. Please login again.'); window.location.href='login.php';</script>");
+    die("<script>alert('Error: Doctor session lost. Please login again.'); window.location.href='login.html';</script>");
 }
 
 // Fetch doctor details
@@ -345,7 +345,7 @@ $stmt->close();
                 <li>Patient Records</li>
                 <li onclick="window.location.href='prescription.php'">Prescriptions</li>
                 <!-- <li>Lab Results</li> -->
-                <li onclick="window.location.href='messages/messages.php'">Messages</li>
+                <li onclick="window.location.href='doctor_chat.html'">Messages</li>
                 <!-- <li>Schedule Management</li> -->
                 <li onclick="window.location.href='doctor-settings.php'">Profile Settings</li>
                 <li onclick="window.location.href='logout.php'">Logout</li>
