@@ -95,8 +95,11 @@ $conn->close();
         }
 
         th {
-            background-color: #5DB2FF;
-            color: white;
+        background-color: #5DB2FF;
+        color: white;
+        font-weight: 600;
+        font-size: 14px; /* Add this line to reduce size */
+        white-space: nowrap; /* Prevent breaking into 2 lines */
         }
 
         .home-btn-container {
