@@ -1,5 +1,7 @@
 # LivMedly
 
+![Cover](https://raw.githubusercontent.com/hetdabhi/livmedly/main/livmedly.png)
+
 A full-stack healthcare management platform (PHP/MySQL/JS) built as a Minor and Major project at Parul University.
 
 ## Demo
