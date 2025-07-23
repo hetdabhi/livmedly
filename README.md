@@ -38,7 +38,7 @@ A full-stack healthcare management platform (PHP/MySQL/JS) built as a Minor and 
 * **Frontend:** HTML, CSS, JavaScript
 * **Backend:** PHP & MySQL
 
-You built both frontend and backend from scratch, ensuring a seamless and intuitive user experience ([linkedin.com][1]).
+You built both frontend and backend from scratch, ensuring a seamless and intuitive user experience (www.linkedin.com/in/hetdabhi).
 
 ---
 
@@ -72,4 +72,4 @@ Your feedback is welcome! Feel free to:
 
 ## 📌 Credits
 
-Built by **Het Dabhi**, B.Tech CSE student at Parul University. Shared as part of a portfolio showcasing web development and full-stack capabilities ([linkedin.com][1], [bytexl.app][2]).
+Built by **Het Dabhi**, B.Tech CSE student at Parul University. Shared as part of a portfolio showcasing web development and full-stack capabilities.
